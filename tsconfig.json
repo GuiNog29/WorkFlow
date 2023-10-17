@@ -79,5 +79,10 @@
   ],
   "include": [
     "src/**/*"
+  ],
+  "editor.formatOnPaste": true,
+  "editor.formatOnType": true,
+  "formattingToggle.affects": [
+    "formatOnSave"
   ]
 }
