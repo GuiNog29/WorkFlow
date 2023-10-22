@@ -20,4 +20,4 @@ app.use((error: Error, request: Request, response: Response, next: NextFunction)
   });
 });
 
-export { app };
+export default app;
