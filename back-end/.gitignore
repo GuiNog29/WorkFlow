@@ -6,6 +6,7 @@
 *.lock
 *.vsidx
 dist/*
+build/*
 .idea
 data
 # Visual Studio 2015
