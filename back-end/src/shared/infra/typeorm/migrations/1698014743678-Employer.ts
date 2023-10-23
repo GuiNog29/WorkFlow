@@ -1,38 +1,51 @@
-import { MigrationInterface, QueryRunner, Table } from "typeorm"
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class Employer1698014743678 implements MigrationInterface {
-    public async up(queryRunner: QueryRunner): Promise<void> {
-      await queryRunner.createTable(new Table({
-        name: "Employer",
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.createTable(
+      new Table({
+        name: 'employer',
         columns: [
           {
-            name: "id",
-            type: "int",
+            name: 'id',
+            type: 'int',
             isPrimary: true,
             isGenerated: true,
-            generationStrategy: "increment"
+            generationStrategy: 'increment',
           },
           {
-            name: "companyName",
-            type: "varchar"
+            name: 'companyName',
+            type: 'varchar',
           },
           {
-            name: "cnpj",
-            type: "varchar"
+            name: 'cnpj',
+            type: 'varchar',
           },
           {
-            name: "email",
-            type: "varchar"
+            name: 'email',
+            type: 'varchar',
           },
           {
-            name: "password",
-            type: "varchar"
-          }
-        ]
-      }), true);
-    }
+            name: 'password',
+            type: 'varchar',
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp with time zone',
+            default: 'now()',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp with time zone',
+            default: 'now()',
+          },
+        ],
+      }),
+      true,
+    );
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-      await queryRunner.dropTable("Employer");
-    }
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropTable('employer');
+  }
 }
