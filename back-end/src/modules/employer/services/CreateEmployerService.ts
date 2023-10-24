@@ -1,11 +1,12 @@
 import { IEmployer } from '../domain/models/IEmployer';
 import { Employer } from '../infra/typeorm/entities/Employer';
 import { EmployerRepository } from './../infra/typeorm/repositories/EmployerRepository';
+import { UserService } from 'src/services/UserService';
 
 export class CreateEmployerService {
-  private employerRepository: EmployerRepository
+  private employerRepository: EmployerRepository;
 
-  constructor(){
+  constructor() {
     this.employerRepository = new EmployerRepository();
   }
 
@@ -15,6 +16,9 @@ export class CreateEmployerService {
     email,
     password,
   }: IEmployer): Promise<Employer> {
+    const userService = new UserService();
+    await userService.validUserExist('employer', { cnpj, email });
+
     return await this.employerRepository.create({
       companyName,
       cnpj,
