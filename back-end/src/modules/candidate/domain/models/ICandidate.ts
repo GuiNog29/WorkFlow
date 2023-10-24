@@ -1,6 +1,6 @@
 export interface ICandidate{
   name: string;
-  cnpj: string;
+  cpf: string;
   email: string;
   password: string;
 }

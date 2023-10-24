@@ -3,6 +3,7 @@ import { Employer } from '../entities/Employer';
 import { dataSource } from '@shared/infra/typeorm';
 import { IEmployer } from '@modules/employer/domain/models/IEmployer';
 import { IEmployerRepository } from './interface/IEmployerRepository';
+import { UserRepository } from '@modules/user/infra/typeorm/repositories/UserRepository';
 
 export class EmployerRepository implements IEmployerRepository {
   private employerRepository: Repository<Employer>;
