@@ -35,4 +35,12 @@ export class CandidateRepository implements ICandidateRepository {
     const deleteResult = await this.candidateRepository.delete(candidateId);
     return deleteResult.affected === 1;
   }
+
+  async findCandidateByCpf(cpf: string): Promise<Candidate | null> {
+    return await this.candidateRepository.findOneBy({ cpf });
+  }
+
+  async findCandidateByEmail(email: string): Promise<Candidate | null> {
+    return await this.candidateRepository.findOneBy({ email });
+  }
 }

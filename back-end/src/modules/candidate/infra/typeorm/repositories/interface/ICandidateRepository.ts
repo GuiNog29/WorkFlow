@@ -7,4 +7,6 @@ export interface ICandidateRepository {
   update(candidateId: number, { name, email, password }: ICandidate): Promise<UpdateResult>;
   getCandidateById(candidateId: number): Promise<Candidate | null>;
   delete(candidateId: number): Promise<Boolean>;
+  findCandidateByCpf(cpf: string): Promise<Candidate | null>;
+  findCandidateByEmail(email: string): Promise<Candidate | null>;
 }
