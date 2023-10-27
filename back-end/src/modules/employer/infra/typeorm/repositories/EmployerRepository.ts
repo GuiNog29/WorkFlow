@@ -25,11 +25,12 @@ export class EmployerRepository implements IEmployerRepository {
 
   async update(
     employerId: number,
-    { companyName, email }: IEmployer,
+    { companyName, email, password }: IEmployer,
   ): Promise<UpdateResult> {
     return await this.employerRepository.update(employerId, {
       companyName,
       email,
+      password
     });
   }
 
@@ -40,5 +41,13 @@ export class EmployerRepository implements IEmployerRepository {
   async delete(employerId: number): Promise<Boolean> {
     const deleteResult = await this.employerRepository.delete(employerId);
     return deleteResult.affected === 1;
+  }
+
+  findEmployerByCnpj(cnpj: string): Promise<Employer | null> {
+    return this.employerRepository.findOneBy({ cnpj });
+  }
+
+  findEmployerByEmail(email: string): Promise<Employer | null> {
+    return this.employerRepository.findOneBy({ email });
   }
 }

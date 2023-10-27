@@ -7,4 +7,6 @@ export interface IEmployerRepository {
   update(employerId: number, { companyName, email }: IEmployer): Promise<UpdateResult>;
   getEmployerById(employerId: number): Promise<Employer | null>;
   delete(employerId: number): Promise<Boolean>;
+  findEmployerByCnpj(cnpj: string): Promise<Employer | null>;
+  findEmployerByEmail(email: string): Promise<Employer | null>;
 }
