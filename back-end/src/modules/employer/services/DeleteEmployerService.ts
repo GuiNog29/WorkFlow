@@ -9,7 +9,7 @@ export class DeleteEmployerService {
     this.employerRepository = new EmployerRepository();
   }
 
-  async execute(employerId: number): Promise<Boolean> {
+  public async execute(employerId: number): Promise<Boolean> {
     const getEmployerByIdService = new GetEmployerByIdService();
     const employer = await getEmployerByIdService.execute(employerId);
 

@@ -9,7 +9,7 @@ export class GetEmployerByIdService {
     this.employerRepository = new EmployerRepository();
   }
 
-  async execute(employerId: number): Promise<Employer | null> {
+  public async execute(employerId: number): Promise<Employer | null> {
     const employer = this.employerRepository.getEmployerById(employerId);
 
     if (!employer) throw new AppError('Usuário não encontrado.');

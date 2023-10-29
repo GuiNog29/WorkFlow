@@ -1,8 +1,8 @@
 import { UpdateResult } from 'typeorm';
-import { IEmployer } from '../domain/models/IEmployer';
 import { EmployerRepository } from '../infra/typeorm/repositories/EmployerRepository';
 import { GetEmployerByIdService } from './GetEmployerByIdService';
 import { AppError } from '@shared/errors/AppError';
+import { ValidEmployerDataService } from './ValidEmployerDataService';
 
 interface IRequest {
   employerId: number;
@@ -18,16 +18,21 @@ export class UpdateEmployerService {
     this.employerRepository = new EmployerRepository();
   }
 
-  async execute({ employerId, companyName, email, password }: IRequest): Promise<UpdateResult> {
+  public async execute(
+    employerId: number,
+    { companyName, email }: IRequest,
+  ): Promise<UpdateResult> {
     const getEmployerByIdService = new GetEmployerByIdService();
-    const employer = await getEmployerByIdService.execute(employerId);
+    const validEmployerDataService = new ValidEmployerDataService();
 
+    await validEmployerDataService.execute(companyName, email);
+    const employer = await getEmployerByIdService.execute(employerId);
     if (!employer) throw new AppError('Usuário não encontrado.');
 
     return await this.employerRepository.update(employerId, {
       companyName,
       email,
-      password,
+      password: employer.password,
       cnpj: employer.cnpj,
     });
   }
