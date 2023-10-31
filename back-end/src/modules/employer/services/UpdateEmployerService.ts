@@ -5,10 +5,8 @@ import { AppError } from '@shared/errors/AppError';
 import { ValidEmployerDataService } from './ValidEmployerDataService';
 
 interface IRequest {
-  employerId: number;
   companyName: string;
   email: string;
-  password: string;
 }
 
 export class UpdateEmployerService {
@@ -27,6 +25,7 @@ export class UpdateEmployerService {
 
     await validEmployerDataService.execute(companyName, email);
     const employer = await getEmployerByIdService.execute(employerId);
+
     if (!employer) throw new AppError('Usuário não encontrado.');
 
     return await this.employerRepository.update(employerId, {

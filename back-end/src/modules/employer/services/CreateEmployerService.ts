@@ -16,7 +16,7 @@ export class CreateEmployerService {
     const validEmployerDataService = new ValidEmployerDataService();
 
     await validEmployerDataService.execute(companyName, email);
-    await validEmployerExistService.execute(companyName, cnpj, email, password);
+    await validEmployerExistService.execute(cnpj, companyName);
 
     return await this.employerRepository.create({
       companyName,
