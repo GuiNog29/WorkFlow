@@ -14,11 +14,11 @@ export class Candidate1698014919856 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           {
-            name: 'companyName',
+            name: 'name',
             type: 'varchar',
           },
           {
-            name: 'cnpj',
+            name: 'cpf',
             type: 'varchar',
           },
           {
