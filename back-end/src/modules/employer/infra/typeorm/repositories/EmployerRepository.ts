@@ -23,14 +23,10 @@ export class EmployerRepository implements IEmployerRepository {
     return newEmployer;
   }
 
-  async update(
-    employerId: number,
-    { companyName, email, password }: IEmployer,
-  ): Promise<UpdateResult> {
+  async update(employerId: number, { companyName, email }: IEmployer): Promise<UpdateResult> {
     return await this.employerRepository.update(employerId, {
       companyName,
       email,
-      password
     });
   }
 
