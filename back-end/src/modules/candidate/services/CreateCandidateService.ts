@@ -10,7 +10,7 @@ export class CreateCandidateService {
     this.candidateRepository = new CandidateRepository();
   }
 
-  public async excecute({ name, cpf, email, password }: ICandidate): Promise<Candidate> {
+  public async execute({ name, cpf, email, password }: ICandidate): Promise<Candidate> {
     const validCandidateExistService = new ValidCandidateExistService();
     await validCandidateExistService.execute(cpf, email);
 
