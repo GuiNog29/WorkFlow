@@ -3,6 +3,7 @@ import { Candidate } from '../entities/Candidate';
 import { ICandidateRepository } from './interface/ICandidateRepository';
 import { ICandidate } from '@modules/candidate/domain/models/ICandidate';
 import { dataSource } from '@shared/infra/typeorm';
+import { hash } from 'bcryptjs';
 
 export class CandidateRepository implements ICandidateRepository {
   private candidateRepository: Repository<Candidate>;
@@ -12,11 +13,12 @@ export class CandidateRepository implements ICandidateRepository {
   }
 
   async create({ name, cpf, email, password }: ICandidate): Promise<Candidate> {
+    const hashedPassword = await hash(password, 8);
     const newCandidate = this.candidateRepository.create({
       name,
       cpf,
       email,
-      password,
+      password: hashedPassword,
     });
 
     await this.candidateRepository.save(newCandidate);
@@ -42,5 +44,14 @@ export class CandidateRepository implements ICandidateRepository {
 
   async findCandidateByEmail(email: string): Promise<Candidate | null> {
     return await this.candidateRepository.findOneBy({ email });
+  }
+
+  async findCandidate(cpf: string, email: string): Promise<Candidate | null> {
+    return this.candidateRepository.findOne({
+      where: [
+        { cpf: cpf },
+        { email: email }
+      ]
+    });
   }
 }
