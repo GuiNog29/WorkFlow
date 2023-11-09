@@ -20,10 +20,12 @@ export class Employer1698014743678 implements MigrationInterface {
           {
             name: 'cnpj',
             type: 'varchar',
+            isUnique: true,
           },
           {
             name: 'email',
             type: 'varchar',
+            isUnique: true,
           },
           {
             name: 'password',

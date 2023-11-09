@@ -20,10 +20,12 @@ export class Candidate1698014919856 implements MigrationInterface {
           {
             name: 'cpf',
             type: 'varchar',
+            isUnique: true,
           },
           {
             name: 'email',
             type: 'varchar',
+            isUnique: true,
           },
           {
             name: 'password',

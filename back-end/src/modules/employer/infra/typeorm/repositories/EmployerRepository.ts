@@ -3,6 +3,7 @@ import { Employer } from '../entities/Employer';
 import { dataSource } from '@shared/infra/typeorm';
 import { IEmployer } from '@modules/employer/domain/models/IEmployer';
 import { IEmployerRepository } from './interface/IEmployerRepository';
+import { hash } from 'bcryptjs';
 
 export class EmployerRepository implements IEmployerRepository {
   private employerRepository: Repository<Employer>;
@@ -12,11 +13,13 @@ export class EmployerRepository implements IEmployerRepository {
   }
 
   async create({ companyName, cnpj, email, password }: IEmployer): Promise<Employer> {
+    const hashedPassword = await hash(password, 8);
+
     const newEmployer = this.employerRepository.create({
       companyName,
       cnpj,
       email,
-      password,
+      password: hashedPassword,
     });
 
     await this.employerRepository.save(newEmployer);
@@ -45,5 +48,14 @@ export class EmployerRepository implements IEmployerRepository {
 
   findEmployerByEmail(email: string): Promise<Employer | null> {
     return this.employerRepository.findOneBy({ email });
+  }
+
+  findEmployer(cnpj: string, email: string): Promise<Employer | null> {
+    return this.employerRepository.findOne({
+      where: [
+        { cnpj: cnpj },
+        { email: email }
+      ]
+    });
   }
 }
