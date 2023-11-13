@@ -33,6 +33,11 @@ export class EmployerRepository implements IEmployerRepository {
     });
   }
 
+  async updateProfilePicture(employerId: number, fileName: string): Promise<Employer | null> {
+    await this.employerRepository.update(employerId, { profile_picture: fileName })
+    return this.getEmployerById(employerId);
+  }
+
   async getEmployerById(employerId: number): Promise<Employer | null> {
     return await this.employerRepository.findOneBy({ id: employerId });
   }
