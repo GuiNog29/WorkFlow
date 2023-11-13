@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import EmployerController from '../controllers/EmployerController';
 import isAuthenticated from '@shared/infra/http/middlewares/isAuthenticated';
+import multer from 'multer';
 
 const employerRoutes = Router();
 const employerController = new EmployerController();
