@@ -32,6 +32,11 @@ export class Employer1698014743678 implements MigrationInterface {
             type: 'varchar',
           },
           {
+            name: 'profile_picture',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
             name: 'created_at',
             type: 'timestamp with time zone',
             default: 'now()',

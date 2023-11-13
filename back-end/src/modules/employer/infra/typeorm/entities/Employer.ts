@@ -17,6 +17,9 @@ export class Employer{
   @Column()
   password: string;
 
+  @Column()
+  profile_picture: string;
+
   @CreateDateColumn()
   created_at: Date;
 

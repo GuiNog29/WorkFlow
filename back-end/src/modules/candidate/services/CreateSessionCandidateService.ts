@@ -1,12 +1,19 @@
-import { AppError } from '@shared/errors/AppError';
 import { compare } from 'bcryptjs';
-import { CandidateRepository } from '../infra/typeorm/repositories/CandidateRepository';
+import { sign } from 'jsonwebtoken';
+import authConfig from '@config/auth';
+import { AppError } from '@shared/errors/AppError';
 import { Candidate } from '../infra/typeorm/entities/Candidate';
+import { CandidateRepository } from '../infra/typeorm/repositories/CandidateRepository';
 
 interface IRequest {
   cpf: string;
   email: string;
   password: string;
+}
+
+interface IResponse {
+  candidate: Candidate;
+  token: string;
 }
 
 export class CreateSessionCandidateService {
@@ -16,7 +23,7 @@ export class CreateSessionCandidateService {
     this.candidateRepository = new CandidateRepository();
   }
 
-  public async execute({ cpf, email, password }: IRequest): Promise<Candidate> {
+  public async execute({ cpf, email, password }: IRequest): Promise<IResponse> {
     const candidate = await this.candidateRepository.findCandidate(cpf, email);
 
     if (!candidate) throw new AppError('CNPJ/Email ou senha estão incorretos.', 401);
@@ -25,6 +32,11 @@ export class CreateSessionCandidateService {
 
     if (!passwordConfirmed) throw new AppError('CNPJ/Email ou senha estão incorretos.', 401);
 
-    return candidate;
+    const token = sign({}, authConfig.jwt.secret, {
+      subject: String(candidate.id),
+      expiresIn: authConfig.jwt.expiresIn,
+    });
+
+    return { candidate, token };
   }
 }

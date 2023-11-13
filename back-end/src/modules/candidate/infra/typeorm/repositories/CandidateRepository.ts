@@ -1,9 +1,9 @@
-import { Repository, UpdateResult } from 'typeorm';
+import { hash } from 'bcryptjs';
 import { Candidate } from '../entities/Candidate';
+import { Repository, UpdateResult } from 'typeorm';
+import { dataSource } from '@shared/infra/typeorm';
 import { ICandidateRepository } from './interface/ICandidateRepository';
 import { ICandidate } from '@modules/candidate/domain/models/ICandidate';
-import { dataSource } from '@shared/infra/typeorm';
-import { hash } from 'bcryptjs';
 
 export class CandidateRepository implements ICandidateRepository {
   private candidateRepository: Repository<Candidate>;
@@ -29,6 +29,11 @@ export class CandidateRepository implements ICandidateRepository {
     return await this.candidateRepository.update(candidateId, { name, email, password });
   }
 
+  async updateProfilePicture(candidateId: number, fileName: string): Promise<Candidate | null> {
+    await this.candidateRepository.update(candidateId, { profile_picture: fileName })
+    return this.getCandidateById(candidateId);
+  }
+
   async getCandidateById(candidateId: number): Promise<Candidate | null> {
     return await this.candidateRepository.findOneBy({ id: candidateId });
   }
@@ -48,10 +53,7 @@ export class CandidateRepository implements ICandidateRepository {
 
   async findCandidate(cpf: string, email: string): Promise<Candidate | null> {
     return this.candidateRepository.findOne({
-      where: [
-        { cpf: cpf },
-        { email: email }
-      ]
+      where: [{ cpf: cpf }, { email: email }],
     });
   }
 }
