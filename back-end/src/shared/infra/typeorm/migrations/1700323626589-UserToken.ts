@@ -18,7 +18,7 @@ export class UserToken1700323626589 implements MigrationInterface {
             type: 'uuid',
           },
           {
-            name: 'user_id',
+            name: 'userId',
             type: 'int',
           },
           {
@@ -37,7 +37,7 @@ export class UserToken1700323626589 implements MigrationInterface {
             name: 'TokenEmployer',
             referencedTableName: 'employers',
             referencedColumnNames: ['id'],
-            columnNames: ['user_id'],
+            columnNames: ['userId'],
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE',
           },
@@ -45,7 +45,7 @@ export class UserToken1700323626589 implements MigrationInterface {
             name: 'TokenCandidate',
             referencedTableName: 'candidates',
             referencedColumnNames: ['id'],
-            columnNames: ['user_id'],
+            columnNames: ['userId'],
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE',
           },
