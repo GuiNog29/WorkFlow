@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class Employer1698014743678 implements MigrationInterface {
+export class UserToken1700323626589 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'employers',
+        name: 'users_tokens',
         columns: [
           {
             name: 'id',
@@ -14,27 +14,12 @@ export class Employer1698014743678 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           {
-            name: 'companyName',
-            type: 'varchar',
+            name: 'token',
+            type: 'uuid',
           },
           {
-            name: 'cnpj',
-            type: 'varchar',
-            isUnique: true,
-          },
-          {
-            name: 'email',
-            type: 'varchar',
-            isUnique: true,
-          },
-          {
-            name: 'password',
-            type: 'varchar',
-          },
-          {
-            name: 'profile_picture',
-            type: 'varchar',
-            isNullable: true,
+            name: 'user_id',
+            type: 'int',
           },
           {
             name: 'created_at',
@@ -47,12 +32,30 @@ export class Employer1698014743678 implements MigrationInterface {
             default: 'now()',
           },
         ],
+        foreignKeys: [
+          {
+            name: 'TokenEmployer',
+            referencedTableName: 'employers',
+            referencedColumnNames: ['id'],
+            columnNames: ['user_id'],
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE',
+          },
+          {
+            name: 'TokenCandidate',
+            referencedTableName: 'candidates',
+            referencedColumnNames: ['id'],
+            columnNames: ['user_id'],
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE',
+          },
+        ],
       }),
       true,
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('employer');
+    await queryRunner.dropTable('users_tokens');
   }
 }

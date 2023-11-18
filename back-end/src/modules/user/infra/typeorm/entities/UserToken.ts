@@ -7,24 +7,15 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Candidate {
+export class UserToken {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  name: string;
+  token: string;
 
   @Column()
-  cpf: string;
-
-  @Column()
-  email: string;
-
-  @Column()
-  password: string;
-
-  @Column()
-  profile_picture: string;
+  user_Id: number;
 
   @CreateDateColumn()
   created_at: Date;
