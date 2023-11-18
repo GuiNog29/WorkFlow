@@ -10,7 +10,7 @@ export class UserTokensRepository implements IUserTokensRepository {
     this.userTokenRepository = dataSource.getRepository(UserToken);
   }
 
-  async findToken(token: string): Promise<UserToken | null> {
+  async findByToken(token: string): Promise<UserToken | null> {
     return await this.userTokenRepository.findOneBy({ token });
   }
 
