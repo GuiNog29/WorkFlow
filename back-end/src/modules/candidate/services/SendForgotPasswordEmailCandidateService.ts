@@ -4,6 +4,7 @@ import { CandidateRepository } from '@modules/candidate/infra/typeorm/repositori
 
 interface IRequest {
   email: string;
+  userType: number;
 }
 
 export class SendForgotPasswordEmailCandidateService {
@@ -15,11 +16,11 @@ export class SendForgotPasswordEmailCandidateService {
     this.userTokenRepository = new UserTokensRepository();
   }
 
-  public async execute({ email }: IRequest) : Promise<void> {
+  public async execute({ userType, email }: IRequest) : Promise<void> {
     const candidate = await this.candidateRepository.findCandidateByEmail(email);
 
     if (!candidate) throw new AppError('Usuário não encontrado.');
 
-    const token = await this.userTokenRepository.generateToken(candidate.id);
+    const token = await this.userTokenRepository.generateToken(userType, candidate.id);
   }
 }

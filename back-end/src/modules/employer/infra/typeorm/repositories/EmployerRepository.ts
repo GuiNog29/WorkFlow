@@ -47,12 +47,12 @@ export class EmployerRepository implements IEmployerRepository {
     return deleteResult.affected === 1;
   }
 
-  findEmployerByCnpj(cnpj: string): Promise<Employer | null> {
-    return this.employerRepository.findOneBy({ cnpj });
+  async findEmployerByCnpj(cnpj: string): Promise<Employer | null> {
+    return await this.employerRepository.findOneBy({ cnpj });
   }
 
-  findEmployerByEmail(email: string): Promise<Employer | null> {
-    return this.employerRepository.findOneBy({ email });
+  async findEmployerByEmail(email: string): Promise<Employer | null> {
+    return await this.employerRepository.findOneBy({ email });
   }
 
   findEmployer(cnpj: string, email: string): Promise<Employer | null> {
