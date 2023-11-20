@@ -3,7 +3,6 @@ import { CreateEmployerService } from '@modules/employer/services/CreateEmployer
 import { DeleteEmployerService } from '@modules/employer/services/DeleteEmployerService';
 import { UpdateEmployerService } from '@modules/employer/services/UpdateEmployerService';
 import { GetEmployerByIdService } from '@modules/employer/services/GetEmployerByIdService';
-import { UpdateProfilePictureEmployerService } from '@modules/employer/services/UpdateProfilePictureEmployerService';
 
 export default class EmployerController {
   public async createEmployer(resquest: Request, response: Response): Promise<Response> {
