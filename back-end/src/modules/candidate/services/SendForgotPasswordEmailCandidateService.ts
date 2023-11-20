@@ -1,5 +1,5 @@
 import { AppError } from '@shared/errors/AppError';
-import { UserTokensRepository } from '../infra/typeorm/repositories/UserTokensRepository';
+import { UserTokensRepository } from '@modules/user/infra/typeorm/repositories/UserTokensRepository';
 import { CandidateRepository } from '@modules/candidate/infra/typeorm/repositories/CandidateRepository';
 
 interface IRequest {
