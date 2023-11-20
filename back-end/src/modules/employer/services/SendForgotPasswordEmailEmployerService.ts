@@ -1,9 +1,10 @@
 import { AppError } from '@shared/errors/AppError';
-import { UserTokensRepository } from '../infra/typeorm/repositories/UserTokensRepository';
 import { EmployerRepository } from '@modules/employer/infra/typeorm/repositories/EmployerRepository';
+import { UserTokensRepository } from '@modules/user/infra/typeorm/repositories/UserTokensRepository';
 
 interface IRequest {
   email: string;
+  userType: number;
 }
 
 export class SendForgotPasswordEmailEmployerService {
@@ -15,11 +16,11 @@ export class SendForgotPasswordEmailEmployerService {
     this.userTokenRepository = new UserTokensRepository();
   }
 
-  public async execute({ email }: IRequest) : Promise<void> {
+  public async execute({ userType, email }: IRequest) : Promise<void> {
     const employer = await this.employerRepository.findEmployerByEmail(email);
 
     if (!employer) throw new AppError('Usuário não encontrado.');
 
-    const token = await this.userTokenRepository.generateToken(employer.id);
+    const token = await this.userTokenRepository.generateToken(userType, employer.id);
   }
 }

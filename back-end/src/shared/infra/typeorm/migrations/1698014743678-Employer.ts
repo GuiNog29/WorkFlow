@@ -53,6 +53,6 @@ export class Employer1698014743678 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('employer');
+    await queryRunner.dropTable('employers');
   }
 }

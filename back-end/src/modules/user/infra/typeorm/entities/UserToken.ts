@@ -5,8 +5,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 
-@Entity()
+@Entity('users_tokens')
 export class UserToken {
   @PrimaryGeneratedColumn()
   id: number;
@@ -22,4 +23,13 @@ export class UserToken {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @Column()
+  userType: number;
+
+  constructor() {
+    if (!this.token) {
+      this.token = uuidv4();
+    }
+  }
 }

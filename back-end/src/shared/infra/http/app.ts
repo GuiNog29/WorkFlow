@@ -1,6 +1,6 @@
+import 'express-async-errors';
 import cors from 'cors';
 import routes from './routes';
-import 'express-async-errors';
 import uploadConfig from '@config/upload';
 import { AppError } from '@shared/errors/AppError';
 import express, { NextFunction, Request, Response } from 'express';
@@ -18,6 +18,8 @@ app.use((error: Error, request: Request, response: Response, next: NextFunction)
       message: error.message,
     });
   }
+
+  console.log(error);
 
   return response.status(500).json({
     status: 'error',

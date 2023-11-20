@@ -31,6 +31,10 @@ export class UserToken1700323626589 implements MigrationInterface {
             type: 'timestamp with time zone',
             default: 'now()',
           },
+          {
+            name: 'userType',
+            type: 'int',
+          },
         ],
         foreignKeys: [
           {
