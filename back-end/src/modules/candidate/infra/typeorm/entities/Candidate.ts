@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity('candidates')
 export class Candidate {
   @PrimaryGeneratedColumn()
   id: number;
@@ -23,7 +23,7 @@ export class Candidate {
   @Column()
   password: string;
 
-  @Column()
+  @Column({ nullable: true })
   profile_picture: string;
 
   @CreateDateColumn()

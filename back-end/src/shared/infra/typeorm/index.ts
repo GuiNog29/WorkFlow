@@ -17,4 +17,5 @@ export const dataSource = new DataSource({
   database: 'dbworkflow',
   entities: [Employer, Candidate, UserToken],
   migrations: [Employer1698014743678, Candidate1698014919856, UserToken1700323626589],
+  synchronize: true,
 });
