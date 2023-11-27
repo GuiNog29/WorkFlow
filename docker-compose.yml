@@ -4,10 +4,11 @@ services:
   postgres:
     image: postgres:latest
     container_name: dbworkflow
+    env_file: .env
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: docker
-      POSTGRES_DB: dbworkflow
+      - POSTGRES_USER: ${POSTGRES_USER}
+      - POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      - POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
