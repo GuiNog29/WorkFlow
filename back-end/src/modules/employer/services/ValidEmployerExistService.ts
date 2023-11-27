@@ -1,5 +1,5 @@
-import { AppError } from '@shared/errors/AppError';
-import { EmployerRepository } from '../infra/typeorm/repositories/EmployerRepository';
+import { AppError } from '@shared/exceptions/AppError';
+import { EmployerRepository } from '../repositories/EmployerRepository';
 
 export class ValidEmployerExistService {
   private employerRepository: EmployerRepository;

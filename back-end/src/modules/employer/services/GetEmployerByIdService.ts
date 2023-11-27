@@ -1,6 +1,6 @@
-import { AppError } from '@shared/errors/AppError';
-import { Employer } from '../infra/typeorm/entities/Employer';
-import { EmployerRepository } from '../infra/typeorm/repositories/EmployerRepository';
+import { AppError } from '@shared/exceptions/AppError';
+import { Employer } from '../entities/Employer';
+import { EmployerRepository } from '../repositories/EmployerRepository';
 
 export class GetEmployerByIdService {
   private employerRepository: EmployerRepository;

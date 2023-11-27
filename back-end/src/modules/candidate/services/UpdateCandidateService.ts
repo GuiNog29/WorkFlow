@@ -1,8 +1,8 @@
-import { ValidCandidateDataService } from './ValidCandidateDataService';
 import { UpdateResult } from 'typeorm';
-import { CandidateRepository } from '../infra/typeorm/repositories/CandidateRepository';
+import { AppError } from '@shared/exceptions/AppError';
 import { GetCandidateByIdService } from './GetCandidateByIdService';
-import { AppError } from '@shared/errors/AppError';
+import { ValidCandidateDataService } from './ValidCandidateDataService';
+import { CandidateRepository } from '../repositories/CandidateRepository';
 
 interface IRequest {
   name: string;

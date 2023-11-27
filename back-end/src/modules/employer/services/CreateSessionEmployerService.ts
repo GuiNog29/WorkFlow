@@ -1,9 +1,9 @@
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import authConfig from '@config/auth';
-import { AppError } from '@shared/errors/AppError';
-import { Employer } from '../infra/typeorm/entities/Employer';
-import { EmployerRepository } from '../infra/typeorm/repositories/EmployerRepository';
+import { Employer } from '../entities/Employer';
+import { AppError } from '@shared/exceptions/AppError';
+import { EmployerRepository } from '../repositories/EmployerRepository';
 
 interface IRequest {
   cnpj: string;

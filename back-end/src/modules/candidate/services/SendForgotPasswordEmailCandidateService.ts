@@ -1,6 +1,6 @@
-import { AppError } from '@shared/errors/AppError';
-import { UserTokensRepository } from '@modules/user/infra/typeorm/repositories/UserTokensRepository';
-import { CandidateRepository } from '@modules/candidate/infra/typeorm/repositories/CandidateRepository';
+import { AppError } from "@shared/exceptions/AppError";
+import { CandidateRepository } from "../repositories/CandidateRepository";
+import { UserTokensRepository } from "@modules/user/repositories/UserTokensRepository";
 
 interface IRequest {
   email: string;

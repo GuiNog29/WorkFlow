@@ -1,6 +1,6 @@
+import { AppError } from '@shared/exceptions/AppError';
 import { GetCandidateByIdService } from './GetCandidateByIdService';
-import { CandidateRepository } from '../infra/typeorm/repositories/CandidateRepository';
-import { AppError } from '@shared/errors/AppError';
+import { CandidateRepository } from '../repositories/CandidateRepository';
 
 export class DeleteCandidateService {
   private candidateRepository: CandidateRepository;

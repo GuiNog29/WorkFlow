@@ -1,7 +1,7 @@
 import { ICandidate } from '../domain/models/ICandidate';
-import { CandidateRepository } from '../infra/typeorm/repositories/CandidateRepository';
-import { Candidate } from '../infra/typeorm/entities/Candidate';
+import { Candidate } from '../entities/Candidate';
 import { ValidCandidateExistService } from './ValidCandidateExistService';
+import { CandidateRepository } from '../repositories/CandidateRepository';
 
 export class CreateCandidateService {
   private candidateRepository: CandidateRepository;
