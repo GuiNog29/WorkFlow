@@ -1,10 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 import uploadConfig from '@config/upload';
-import { AppError } from '@shared/errors/AppError';
-import { Employer } from '../infra/typeorm/entities/Employer';
+import { Employer } from '../entities/Employer';
+import { AppError } from '@shared/exceptions/AppError';
 import { GetEmployerByIdService } from './GetEmployerByIdService';
-import { EmployerRepository } from '../infra/typeorm/repositories/EmployerRepository';
+import { EmployerRepository } from '../repositories/EmployerRepository';
 
 interface IRequest {
   employerId: string;

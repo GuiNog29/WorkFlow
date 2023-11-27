@@ -1,8 +1,8 @@
 import { UpdateResult } from 'typeorm';
-import { EmployerRepository } from '../infra/typeorm/repositories/EmployerRepository';
+import { AppError } from '@shared/exceptions/AppError';
 import { GetEmployerByIdService } from './GetEmployerByIdService';
-import { AppError } from '@shared/errors/AppError';
 import { ValidEmployerDataService } from './ValidEmployerDataService';
+import { EmployerRepository } from '../repositories/EmployerRepository';
 
 interface IRequest {
   companyName: string;

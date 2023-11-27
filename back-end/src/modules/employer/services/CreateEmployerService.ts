@@ -1,6 +1,6 @@
 import { IEmployer } from '../domain/models/IEmployer';
-import { Employer } from '../infra/typeorm/entities/Employer';
-import { EmployerRepository } from './../infra/typeorm/repositories/EmployerRepository';
+import { Employer } from '../entities/Employer';
+import { EmployerRepository } from '../repositories/EmployerRepository';
 import { ValidEmployerDataService } from './ValidEmployerDataService';
 import { ValidEmployerExistService } from './ValidEmployerExistService';
 

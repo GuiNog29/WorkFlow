@@ -1,6 +1,6 @@
-import { AppError } from '@shared/errors/AppError';
-import { Candidate } from '../infra/typeorm/entities/Candidate';
-import { CandidateRepository } from '../infra/typeorm/repositories/CandidateRepository';
+import { Candidate } from '../entities/Candidate';
+import { AppError } from '@shared/exceptions/AppError';
+import { CandidateRepository } from '../repositories/CandidateRepository';
 
 export class GetCandidateByIdService {
   private candidateRepository: CandidateRepository;

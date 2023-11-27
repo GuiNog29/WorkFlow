@@ -1,8 +1,8 @@
 import { hash } from 'bcryptjs';
 import { addHours, isAfter } from 'date-fns';
-import { AppError } from '@shared/errors/AppError';
-import { EmployerRepository } from '@modules/employer/infra/typeorm/repositories/EmployerRepository';
-import { UserTokensRepository } from '@modules/user/infra/typeorm/repositories/UserTokensRepository';
+import { AppError } from '@shared/exceptions/AppError';
+import { EmployerRepository } from '../repositories/EmployerRepository';
+import { UserTokensRepository } from '@modules/user/repositories/UserTokensRepository';
 
 interface IRequest {
   token: string;

@@ -1,5 +1,5 @@
-import { AppError } from '@shared/errors/AppError';
-import { CandidateRepository } from '../infra/typeorm/repositories/CandidateRepository';
+import { AppError } from "@shared/exceptions/AppError";
+import { CandidateRepository } from "../repositories/CandidateRepository";
 
 export class ValidCandidateExistService {
   private candidateRepository: CandidateRepository;

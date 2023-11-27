@@ -1,10 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 import uploadConfig from '@config/upload';
-import { AppError } from '@shared/errors/AppError';
-import { Candidate } from '../infra/typeorm/entities/Candidate';
+import { Candidate } from '../entities/Candidate';
+import { AppError } from '@shared/exceptions/AppError';
 import { GetCandidateByIdService } from './GetCandidateByIdService';
-import { CandidateRepository } from '../infra/typeorm/repositories/CandidateRepository';
+import { CandidateRepository } from '../repositories/CandidateRepository';
 
 interface IRequest {
   candidateId: string;
