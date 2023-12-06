@@ -4,14 +4,14 @@ import uploadConfig from '@config/upload';
 import EmployerController from '../controllers/EmployerController';
 import isAuthenticated from '@modules/http/middlewares/isAuthenticated';
 import SessionEmployerController from '../controllers/SessionEmployerController';
-import ForgotPasswordEmployerController from '../controllers/ForgotPasswordEmployerController';
+import SendForgotPasswordEmployerController from '../controllers/SendForgotPasswordEmployerController';
 import UpdateProfilePictureEmployerController from '../controllers/UpdateProfilePictureEmployerController';
 
 const employerRoutes = Router();
 const upload = multer(uploadConfig);
 const employerController = new EmployerController();
 const sessionEmployerController = new SessionEmployerController();
-const forgotPasswordEmployerController = new ForgotPasswordEmployerController();
+const sendForgotPasswordEmployerController = new SendForgotPasswordEmployerController();
 const updateProfilePictureController = new UpdateProfilePictureEmployerController();
 
 employerRoutes.post('/create', employerController.createEmployer);
@@ -25,6 +25,6 @@ employerRoutes.patch(
   updateProfilePictureController.update,
 );
 employerRoutes.post('/createSession', sessionEmployerController.create);
-employerRoutes.post('/forgotPassword', forgotPasswordEmployerController.create);
+employerRoutes.post('/forgotPassword', sendForgotPasswordEmployerController.create);
 
 export default employerRoutes;

@@ -4,14 +4,14 @@ import uploadConfig from '@config/upload';
 import CandidateController from '../controllers/CandidateController';
 import isAuthenticated from '@modules/http/middlewares/isAuthenticated';
 import SessionCandidateController from '../controllers/SessionCandidateController';
-import ForgotPasswordCandidateController from '../controllers/ForgotPasswordCandidateController';
+import SendForgotPasswordCandidateController from '../controllers/SendForgotPasswordCandidateController';
 import UpdateProfilePictureCandidateController from '../controllers/UpdateProfilePictureCandidateController';
 
 const candidateRoutes = Router();
 const upload = multer(uploadConfig);
 const candidateController = new CandidateController();
 const sessionCandidateController = new SessionCandidateController();
-const forgotPasswordCandidateController = new ForgotPasswordCandidateController();
+const sendForgotPasswordCandidateController = new SendForgotPasswordCandidateController();
 const updateProfilePictureController = new UpdateProfilePictureCandidateController();
 
 candidateRoutes.post('/create', candidateController.createCandidate);
@@ -29,6 +29,6 @@ candidateRoutes.patch(
   updateProfilePictureController.update,
 );
 candidateRoutes.post('/createSession', sessionCandidateController.create);
-candidateRoutes.post('/forgotPassword', forgotPasswordCandidateController.create);
+candidateRoutes.post('/forgotPassword', sendForgotPasswordCandidateController.create);
 
 export default candidateRoutes;
