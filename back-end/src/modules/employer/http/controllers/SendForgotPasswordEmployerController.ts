@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { SendForgotPasswordEmailEmployerService } from '@modules/employer/services/SendForgotPasswordEmailEmployerService';
 
-export default class ForgotPasswordEmployerController {
+export default class SendForgotPasswordEmployerController {
   public async create(request: Request, response: Response): Promise<Response> {
     const { email } = request.body;
     const employer = 1;
