@@ -17,18 +17,28 @@ export class SendForgotPasswordEmailEmployerService {
     this.userTokenRepository = new UserTokensRepository();
   }
 
-  public async execute({ userType, email }: IRequest) : Promise<void> {
+  public async execute({ userType, email }: IRequest): Promise<void> {
     const employer = await this.employerRepository.findEmployerByEmail(email);
 
     if (!employer) throw new AppError('Usuário não encontrado.');
 
-    const token = await this.userTokenRepository.generateToken(userType, employer.id);
+    const { token } = await this.userTokenRepository.generateToken(userType, employer.id);
 
     console.log(token);
 
     await EtheralMail.sendMail({
-      to: email,
-      body: `Solicitação de redefinição de senha recebida: ${token?.token}`
-    })
+      to: {
+        name: employer.companyName,
+        email: employer.email,
+      },
+      subject: 'WorkFlow - Recuperação de Senha',
+      templateData: {
+        template: `Olá {{name}}: {{token}}`,
+        variables: {
+          name: employer.companyName,
+          token,
+        },
+      },
+    });
   }
 }

@@ -1,7 +1,7 @@
-import EtheralMail from "@config/mail/EtherealMail";
-import { AppError } from "@shared/exceptions/AppError";
-import { CandidateRepository } from "../repositories/CandidateRepository";
-import { UserTokensRepository } from "@modules/user/repositories/UserTokensRepository";
+import EtheralMail from '@config/mail/EtherealMail';
+import { AppError } from '@shared/exceptions/AppError';
+import { CandidateRepository } from '../repositories/CandidateRepository';
+import { UserTokensRepository } from '@modules/user/repositories/UserTokensRepository';
 
 interface IRequest {
   email: string;
@@ -17,18 +17,28 @@ export class SendForgotPasswordEmailCandidateService {
     this.userTokenRepository = new UserTokensRepository();
   }
 
-  public async execute({ userType, email }: IRequest) : Promise<void> {
+  public async execute({ userType, email }: IRequest): Promise<void> {
     const candidate = await this.candidateRepository.findCandidateByEmail(email);
 
     if (!candidate) throw new AppError('Usuário não encontrado.');
 
-    const token = await this.userTokenRepository.generateToken(userType, candidate.id);
+    const { token } = await this.userTokenRepository.generateToken(userType, candidate.id);
 
     console.log(token);
 
     await EtheralMail.sendMail({
-      to: email,
-      body: `Solicitação de redefinição de senha recebida: ${token?.token}`
-    })
+      to: {
+        name: candidate.name,
+        email: candidate.email,
+      },
+      subject: 'WorkFlow - Recuperação de Senha',
+      templateData: {
+        template: `Olá {{name}}: {{token}}`,
+        variables: {
+          name: candidate.name,
+          token,
+        },
+      },
+    });
   }
 }
