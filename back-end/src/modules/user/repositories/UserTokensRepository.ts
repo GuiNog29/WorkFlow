@@ -14,7 +14,7 @@ export class UserTokensRepository implements IUserTokensRepository {
     return await this.userTokenRepository.findOneBy({ token });
   }
 
-  async generateToken(userType: number, userId: number): Promise<UserToken | null> {
+  async generateToken(userType: number, userId: number): Promise<UserToken> {
     const userToken = this.userTokenRepository.create({ userId, userType });
     await this.userTokenRepository.save(userToken);
     return userToken;

@@ -1,3 +1,5 @@
+import path from 'path';
+import EtheralMail from '@config/mail/EtherealMail';
 import { AppError } from '@shared/exceptions/AppError';
 import { EmployerRepository } from '../repositories/EmployerRepository';
 import { UserTokensRepository } from '@modules/user/repositories/UserTokensRepository';
@@ -16,11 +18,35 @@ export class SendForgotPasswordEmailEmployerService {
     this.userTokenRepository = new UserTokensRepository();
   }
 
-  public async execute({ userType, email }: IRequest) : Promise<void> {
+  public async execute({ userType, email }: IRequest): Promise<void> {
     const employer = await this.employerRepository.findEmployerByEmail(email);
 
     if (!employer) throw new AppError('Usuário não encontrado.');
 
-    const token = await this.userTokenRepository.generateToken(userType, employer.id);
+    const { token } = await this.userTokenRepository.generateToken(userType, employer.id);
+
+    const forgotPasswordTemplate = path.resolve(
+      __dirname,
+      '..',
+      '..',
+      'user',
+      'views',
+      'forgot_passwor.hbs',
+    );
+
+    await EtheralMail.sendMail({
+      to: {
+        name: employer.companyName,
+        email: employer.email,
+      },
+      subject: 'WorkFlow - Recuperação de Senha',
+      templateData: {
+        file: forgotPasswordTemplate,
+        variables: {
+          name: employer.companyName,
+          link: `http://localhost:3000/resetPassword?token=${token}`,
+        },
+      },
+    });
   }
 }
