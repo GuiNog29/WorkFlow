@@ -1,3 +1,4 @@
+import EtheralMail from "@config/mail/EtherealMail";
 import { AppError } from "@shared/exceptions/AppError";
 import { CandidateRepository } from "../repositories/CandidateRepository";
 import { UserTokensRepository } from "@modules/user/repositories/UserTokensRepository";
@@ -22,5 +23,12 @@ export class SendForgotPasswordEmailCandidateService {
     if (!candidate) throw new AppError('Usuário não encontrado.');
 
     const token = await this.userTokenRepository.generateToken(userType, candidate.id);
+
+    console.log(token);
+
+    await EtheralMail.sendMail({
+      to: email,
+      body: `Solicitação de redefinição de senha recebida: ${token?.token}`
+    })
   }
 }
