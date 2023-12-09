@@ -1,3 +1,4 @@
+import path from 'path';
 import EtheralMail from '@config/mail/EtherealMail';
 import { AppError } from '@shared/exceptions/AppError';
 import { CandidateRepository } from '../repositories/CandidateRepository';
@@ -24,7 +25,14 @@ export class SendForgotPasswordEmailCandidateService {
 
     const { token } = await this.userTokenRepository.generateToken(userType, candidate.id);
 
-    console.log(token);
+    const forgotPasswordTemplate = path.resolve(
+      __dirname,
+      '..',
+      '..',
+      'user',
+      'views',
+      'forgot_password.hbs',
+    );
 
     await EtheralMail.sendMail({
       to: {
@@ -33,10 +41,10 @@ export class SendForgotPasswordEmailCandidateService {
       },
       subject: 'WorkFlow - Recuperação de Senha',
       templateData: {
-        template: `Olá {{name}}: {{token}}`,
+        file: forgotPasswordTemplate,
         variables: {
           name: candidate.name,
-          token,
+          link: `http://localhost:3000/resetPassword?token=${token}`,
         },
       },
     });
