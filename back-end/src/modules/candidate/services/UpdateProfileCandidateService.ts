@@ -49,6 +49,8 @@ export default class UpdateProfileCandidateService {
     candidate.name = name;
     candidate.email = email;
 
+    await this.candidateRepository.save(candidate);
+
     return candidate;
   }
 }

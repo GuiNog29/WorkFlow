@@ -49,6 +49,8 @@ export default class UpdateProfileCandidateService {
     employer.companyName = companyName;
     employer.email = email;
 
+    await this.employerRepository.save(employer);
+
     return employer;
   }
 }

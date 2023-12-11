@@ -63,4 +63,8 @@ export class EmployerRepository implements IEmployerRepository {
       ]
     });
   }
+
+  async save(employer: Employer): Promise<void>{
+    await this.employerRepository.save(employer);
+  }
 }
