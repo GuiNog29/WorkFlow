@@ -56,4 +56,8 @@ export class CandidateRepository implements ICandidateRepository {
       where: [{ cpf: cpf }, { email: email }],
     });
   }
+
+  async save(candidate: Candidate): Promise<void>{
+    await this.candidateRepository.save(candidate);
+  }
 }
