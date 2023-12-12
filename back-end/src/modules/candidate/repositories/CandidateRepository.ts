@@ -2,14 +2,18 @@ import { hash } from 'bcryptjs';
 import { dataSource } from '@infra/database';
 import { Candidate } from '../entities/Candidate';
 import { Repository, UpdateResult } from 'typeorm';
-import { ICandidateRepository } from './interface/ICandidateRepository';
+import { ICandidateRepository, SearchParams } from './interface/ICandidateRepository';
 import { ICandidate } from '@modules/candidate/domain/models/ICandidate';
+import { ICandidatePaginate } from '../domain/models/ICandidatePaginate';
 
 export class CandidateRepository implements ICandidateRepository {
   private candidateRepository: Repository<Candidate>;
 
   constructor() {
     this.candidateRepository = dataSource.getRepository(Candidate);
+  }
+  findCpfOrEmail(cpf: string, email: string): Promise<Candidate | null> {
+    throw new Error('Method not implemented.');
   }
 
   async create({ name, cpf, email, password }: ICandidate): Promise<Candidate> {
@@ -41,6 +45,23 @@ export class CandidateRepository implements ICandidateRepository {
   async delete(candidateId: number): Promise<Boolean> {
     const deleteResult = await this.candidateRepository.delete(candidateId);
     return deleteResult.affected === 1;
+  }
+
+  async findAll({ page, skip, take }: SearchParams): Promise<ICandidatePaginate> {
+    const [candidates, count] = await this.candidateRepository
+      .createQueryBuilder()
+      .skip(skip)
+      .take(take)
+      .getManyAndCount();
+
+    const result = {
+      per_page: take,
+      total: count,
+      current_page: page,
+      data: candidates,
+    };
+
+    return result;
   }
 
   async findCandidateByCpf(cpf: string): Promise<Candidate | null> {
