@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Exclude, Expose } from 'class-transformer';
 
 @Entity('candidates')
 export class Candidate {
@@ -21,6 +22,7 @@ export class Candidate {
   email: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @Column({ nullable: true })
@@ -31,4 +33,11 @@ export class Candidate {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @Expose({ name: 'profile_picture_url' })
+  getProfilePictureUrl(): string | null {
+    if (!this.profile_picture) return null;
+
+    return `${process.env.APP_API_URL}/files/${this.profile_picture}`;
+  }
 }

@@ -1,5 +1,6 @@
-import { CreateSessionCandidateService } from '@modules/candidate/services/CreateSessionCandidateService';
 import { Request, Response } from 'express';
+import { instanceToInstance } from 'class-transformer';
+import { CreateSessionCandidateService } from '@modules/candidate/services/CreateSessionCandidateService';
 
 export default class SessionCandidateController {
   public async create(request: Request, response: Response): Promise<Response> {
@@ -13,6 +14,6 @@ export default class SessionCandidateController {
       password,
     });
 
-    return response.json(candidate);
+    return response.json(instanceToInstance(candidate));
   }
 }

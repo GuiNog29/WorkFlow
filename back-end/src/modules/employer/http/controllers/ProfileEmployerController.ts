@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { instanceToInstance } from 'class-transformer';
 import { GetEmployerByIdService } from '@modules/employer/services/GetEmployerByIdService';
 import UpdateProfileEmployerService from '@modules/employer/services/UpdateProfileEmployerService';
 
@@ -6,8 +7,7 @@ export default class ProfileEmployerController {
   public async show(request: Request, response: Response): Promise<Response> {
     const getEmployerByIdService = new GetEmployerByIdService();
     const userId = Number(request.user.id);
-    const employer = await getEmployerByIdService.execute(userId);
-    return response.json(employer);
+    return response.json(instanceToInstance(await getEmployerByIdService.execute(userId)));
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
@@ -23,6 +23,6 @@ export default class ProfileEmployerController {
       oldPassword,
     });
 
-    return response.json(user);
+    return response.json(instanceToInstance(user));
   }
 }
