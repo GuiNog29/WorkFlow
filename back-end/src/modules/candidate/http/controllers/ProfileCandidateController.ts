@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { instanceToInstance } from 'class-transformer';
 import { GetCandidateByIdService } from '@modules/candidate/services/GetCandidateByIdService';
 import UpdateProfileCandidateService from '@modules/candidate/services/UpdateProfileCandidateService';
 
@@ -6,8 +7,7 @@ export default class ProfileCandidateController {
   public async show(request: Request, response: Response): Promise<Response> {
     const getCandidateByIdService = new GetCandidateByIdService();
     const userId = Number(request.user.id);
-    const candidate = await getCandidateByIdService.execute(userId);
-    return response.json(candidate);
+    return response.json(instanceToInstance(await getCandidateByIdService.execute(userId)));
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
@@ -23,6 +23,6 @@ export default class ProfileCandidateController {
       oldPassword,
     });
 
-    return response.json(user);
+    return response.json(instanceToInstance(user));
   }
 }

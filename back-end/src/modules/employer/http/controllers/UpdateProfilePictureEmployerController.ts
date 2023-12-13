@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { instanceToInstance } from 'class-transformer';
 import { UpdateProfilePictureEmployerService } from '@modules/employer/services/UpdateProfilePictureEmployerService';
 
 export default class UpdateProfilePictureEmployerController {
@@ -9,6 +10,6 @@ export default class UpdateProfilePictureEmployerController {
       fileName: request.file?.filename as string,
     });
 
-    return response.json(employer);
+    return response.json(instanceToInstance(employer));
   }
 }

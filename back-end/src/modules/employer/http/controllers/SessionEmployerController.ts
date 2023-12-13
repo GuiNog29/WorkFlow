@@ -1,5 +1,6 @@
-import { CreateSessionEmployerService } from '@modules/employer/services/CreateSessionEmployerService';
 import { Request, Response } from 'express';
+import {instanceToInstance} from 'class-transformer'
+import { CreateSessionEmployerService } from '@modules/employer/services/CreateSessionEmployerService';
 
 export default class SessionEmployerController {
   public async create(request: Request, response: Response): Promise<Response> {
@@ -13,6 +14,6 @@ export default class SessionEmployerController {
       password,
     });
 
-    return response.json(employer);
+    return response.json(instanceToInstance(employer));
   }
 }
