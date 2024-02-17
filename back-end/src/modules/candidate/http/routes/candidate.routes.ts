@@ -17,6 +17,7 @@ const sendForgotPasswordCandidateController = new SendForgotPasswordCandidateCon
 const updateProfilePictureController = new UpdateProfilePictureCandidateController();
 
 candidateRoutes.post('/create', candidateController.createCandidate);
+candidateRoutes.get('/listCandidates', isAuthenticated, candidateController.listCandidates);
 candidateRoutes.put('/update/:id', isAuthenticated, candidateController.updateCandidate);
 candidateRoutes.get('/get/:id', isAuthenticated, candidateController.getCandidateById);
 candidateRoutes.delete(

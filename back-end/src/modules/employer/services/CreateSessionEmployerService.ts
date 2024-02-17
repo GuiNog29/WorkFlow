@@ -32,7 +32,7 @@ export class CreateSessionEmployerService {
 
     if (!passwordConfirmed) throw new AppError('CNPJ/Email ou senha estão incorretos.', 401);
 
-    const token = sign({}, authConfig.jwt.secret, {
+    const token = sign({}, authConfig.jwt.secret as string, {
       subject: String(employer.id),
       expiresIn: authConfig.jwt.expiresIn,
     });

@@ -1,13 +1,22 @@
-import { CandidateRepository } from "../repositories/CandidateRepository";
+import { ICandidatePaginate } from '../domain/models/ICandidatePaginate';
+import { CandidateRepository } from '../repositories/CandidateRepository';
 
-export default class ListCandidateService{
+interface SearchParams {
+  page: number;
+  limit: number;
+}
+
+export class ListCandidateService {
   private candidateRepository: CandidateRepository;
 
   constructor() {
     this.candidateRepository = new CandidateRepository();
   }
 
-  public async execute(){
-    const candidates = this.candidateRepository.create
+  public async execute({ page, limit }: SearchParams): Promise<ICandidatePaginate> {
+    const take = limit;
+    const skip = (Number(page) - 1) * take;
+    const candidates = this.candidateRepository.findAll({ page, skip, take });
+    return candidates;
   }
 }
