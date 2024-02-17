@@ -1,4 +1,5 @@
 import { UpdateResult } from 'typeorm';
+import RedisCache from '@shared/cache/RedisCache';
 import { AppError } from '@shared/exceptions/AppError';
 import { GetCandidateByIdService } from './GetCandidateByIdService';
 import { ValidCandidateDataService } from './ValidCandidateDataService';
@@ -17,6 +18,7 @@ export class UpdateCandidateService {
   }
 
   async execute(candidateId: number, { name, email }: IRequest): Promise<UpdateResult> {
+    const redisCache = new RedisCache();
     const getCandidateByIdService = new GetCandidateByIdService();
     const validCandidateDataService = new ValidCandidateDataService();
 
@@ -24,6 +26,8 @@ export class UpdateCandidateService {
     const candidate = await getCandidateByIdService.execute(candidateId);
 
     if (!candidate) throw new AppError('Usuário não encontrado.');
+
+    await redisCache.invalidate('workflow-CANDIDATES_LIST');
 
     return await this.candidateRepository.update(candidateId, {
       name,

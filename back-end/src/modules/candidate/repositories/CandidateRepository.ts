@@ -12,6 +12,7 @@ export class CandidateRepository implements ICandidateRepository {
   constructor() {
     this.candidateRepository = dataSource.getRepository(Candidate);
   }
+
   findCpfOrEmail(cpf: string, email: string): Promise<Candidate | null> {
     throw new Error('Method not implemented.');
   }
