@@ -1,4 +1,6 @@
 import path from 'path';
+import SESMail from '@config/mail/SESMail';
+import mailConfig from '@config/mail/mail';
 import EtheralMail from '@config/mail/EtherealMail';
 import { AppError } from '@shared/exceptions/AppError';
 import { CandidateRepository } from '../repositories/CandidateRepository';
@@ -33,6 +35,24 @@ export class SendForgotPasswordEmailCandidateService {
       'views',
       'forgot_password.hbs',
     );
+
+    if (mailConfig.driver === 'ses') {
+      await SESMail.sendMail({
+        to: {
+          name: candidate.name,
+          email: candidate.email,
+        },
+        subject: 'WorkFlow - Recuperação de Senha',
+        templateData: {
+          file: forgotPasswordTemplate,
+          variables: {
+            name: candidate.name,
+            link: `${process.env.APP_WEB_URL}/resetPassword?token=${token}`,
+          },
+        },
+      });
+      return;
+    }
 
     await EtheralMail.sendMail({
       to: {
