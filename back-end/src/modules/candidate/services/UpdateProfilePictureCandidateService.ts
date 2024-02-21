@@ -1,11 +1,9 @@
-import fs from 'fs';
-import path from 'path';
-import uploadConfig from '@config/upload';
 import { Candidate } from '../entities/Candidate';
-import RedisCache from '@shared/cache/RedisCache';
+import { RedisCache } from '@shared/cache/RedisCache';
 import { AppError } from '@shared/exceptions/AppError';
 import { GetCandidateByIdService } from './GetCandidateByIdService';
 import { CandidateRepository } from '../repositories/CandidateRepository';
+import { DiskStorageProvider } from '@shared/providers/StorageProvider/DiskStorageProvider';
 
 interface IRequest {
   candidateId: string;
@@ -23,22 +21,19 @@ export class UpdateProfilePictureCandidateService {
     const redisCache = new RedisCache();
     const getCandidateByIdService = new GetCandidateByIdService();
     const candidate = await getCandidateByIdService.execute(Number(candidateId));
+    const storageProvider = new DiskStorageProvider();
 
     if (!candidate) throw new AppError('Usuário não encontrado.');
 
-    if (candidate.profile_picture) {
-      const candidateProfilePicturePath = path.join(
-        uploadConfig.directory,
-        candidate.profile_picture,
-      );
+    if (candidate.profile_picture) await storageProvider.deleteFile(candidate.profile_picture);
 
-      const candidateProfilePictureExists = await fs.promises.stat(candidateProfilePicturePath);
-
-      if (candidateProfilePictureExists) await fs.promises.unlink(candidateProfilePicturePath);
-    }
+    const profilePicFileName = await storageProvider.saveFile(fileName);
 
     await redisCache.invalidate('workflow-CANDIDATES_LIST');
 
-    return await this.candidateRepository.updateProfilePicture(Number(candidateId), fileName);
+    return await this.candidateRepository.updateProfilePicture(
+      Number(candidateId),
+      profilePicFileName,
+    );
   }
 }

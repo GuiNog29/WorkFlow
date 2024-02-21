@@ -1,10 +1,8 @@
-import fs from 'fs';
-import path from 'path';
-import uploadConfig from '@config/upload';
 import { Employer } from '../entities/Employer';
 import { AppError } from '@shared/exceptions/AppError';
 import { GetEmployerByIdService } from './GetEmployerByIdService';
 import { EmployerRepository } from '../repositories/EmployerRepository';
+import { DiskStorageProvider } from '@shared/providers/StorageProvider/DiskStorageProvider';
 
 interface IRequest {
   employerId: string;
@@ -20,21 +18,20 @@ export class UpdateProfilePictureEmployerService {
 
   async execute({ employerId, fileName }: IRequest): Promise<Employer | null> {
     const getEmployerByIdService = new GetEmployerByIdService();
+    const storageProvider = new DiskStorageProvider();
     const employer = await getEmployerByIdService.execute(Number(employerId));
 
     if (!employer) throw new AppError('Usuário não encontrado.');
 
     if (employer.profile_picture) {
-      const employerProfilePicturePath = path.join(
-        uploadConfig.directory,
-        employer.profile_picture,
-      );
-
-      const employerProfilePictureExists = await fs.promises.stat(employerProfilePicturePath);
-
-      if (employerProfilePictureExists) await fs.promises.unlink(employerProfilePicturePath);
+      await storageProvider.deleteFile(fileName);
     }
 
-    return await this.employerRepository.updateProfilePicture(Number(employerId), fileName);
+    const profilePicFileName = await storageProvider.saveFile(fileName);
+
+    return await this.employerRepository.updateProfilePicture(
+      Number(employerId),
+      profilePicFileName,
+    );
   }
 }

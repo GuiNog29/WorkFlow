@@ -1,5 +1,5 @@
 import { UpdateResult } from 'typeorm';
-import RedisCache from '@shared/cache/RedisCache';
+import { RedisCache } from '@shared/cache/RedisCache';
 import { AppError } from '@shared/exceptions/AppError';
 import { GetCandidateByIdService } from './GetCandidateByIdService';
 import { ValidCandidateDataService } from './ValidCandidateDataService';
