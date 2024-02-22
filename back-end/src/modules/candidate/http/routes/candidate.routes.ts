@@ -9,7 +9,7 @@ import SendForgotPasswordCandidateController from '../controllers/SendForgotPass
 import UpdateProfilePictureCandidateController from '../controllers/UpdateProfilePictureCandidateController';
 
 const candidateRoutes = Router();
-const upload = multer(uploadConfig);
+const upload = multer(uploadConfig.multer);
 const candidateController = new CandidateController();
 const sessionCandidateController = new SessionCandidateController();
 const profileCandidateController = new ProfileCandidateController();
