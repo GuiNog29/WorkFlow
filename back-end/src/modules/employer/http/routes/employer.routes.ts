@@ -9,7 +9,7 @@ import SendForgotPasswordEmployerController from '../controllers/SendForgotPassw
 import UpdateProfilePictureEmployerController from '../controllers/UpdateProfilePictureEmployerController';
 
 const employerRoutes = Router();
-const upload = multer(uploadConfig);
+const upload = multer(uploadConfig.multer);
 const employerController = new EmployerController();
 const sessionEmployerController = new SessionEmployerController();
 const profileEmployerController = new ProfileEmployerController();

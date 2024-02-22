@@ -1,6 +1,6 @@
 import { compare, hash } from 'bcryptjs';
 import { Candidate } from '../entities/Candidate';
-import RedisCache from '@shared/cache/RedisCache';
+import { RedisCache } from '@shared/cache/RedisCache';
 import { AppError } from '@shared/exceptions/AppError';
 import { GetCandidateByIdService } from './GetCandidateByIdService';
 import { CandidateRepository } from '../repositories/CandidateRepository';

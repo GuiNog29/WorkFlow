@@ -1,6 +1,6 @@
+import authConfig from '@config/auth';
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
-import authConfig from '@config/auth';
 import { Candidate } from '../entities/Candidate';
 import { AppError } from '@shared/exceptions/AppError';
 import { CandidateRepository } from '../repositories/CandidateRepository';

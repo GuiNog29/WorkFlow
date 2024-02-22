@@ -1,7 +1,6 @@
+import { RedisCache } from '@shared/cache/RedisCache';
 import { ICandidatePaginate } from '../domain/models/ICandidatePaginate';
-import { Candidate } from '../entities/Candidate';
 import { CandidateRepository } from '../repositories/CandidateRepository';
-import RedisCache from '@shared/cache/RedisCache';
 
 interface SearchParams {
   page: number;

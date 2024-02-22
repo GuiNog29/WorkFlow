@@ -1,5 +1,5 @@
 import { Candidate } from '../entities/Candidate';
-import RedisCache from '@shared/cache/RedisCache';
+import { RedisCache } from '@shared/cache/RedisCache';
 import { ICandidate } from '../domain/models/ICandidate';
 import { ValidCandidateExistService } from './ValidCandidateExistService';
 import { CandidateRepository } from '../repositories/CandidateRepository';
