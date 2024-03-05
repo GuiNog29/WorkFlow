@@ -1,4 +1,4 @@
-import redisCache  from '@shared/cache/RedisCache';
+import redisCache  from '@common/cache/RedisCache';
 import { Candidate } from '../entities/Candidate';
 import { ICandidate } from '../domain/models/ICandidate';
 import { ValidCandidateExistService } from './ValidCandidateExistService';

@@ -1,4 +1,4 @@
-import { AppError } from '@shared/exceptions/AppError';
+import { AppError } from '@common/exceptions/AppError';
 import { GetEmployerByIdService } from './GetEmployerByIdService';
 import { EmployerRepository } from '../repositories/EmployerRepository';
 

@@ -2,7 +2,7 @@ import path from 'path';
 import SESMail from '@config/mail/SESMail';
 import mailConfig from '@config/mail/mail';
 import EtheralMail from '@config/mail/EtherealMail';
-import { AppError } from '@shared/exceptions/AppError';
+import { AppError } from '@common/exceptions/AppError';
 import { EmployerRepository } from '../repositories/EmployerRepository';
 import { UserTokensRepository } from '@modules/user/repositories/UserTokensRepository';
 

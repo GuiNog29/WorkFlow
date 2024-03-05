@@ -3,7 +3,7 @@ import path from 'path';
 import mime from 'mime';
 import { S3 } from 'aws-sdk';
 import uploadConfig from '@config/upload';
-import { AppError } from '@shared/exceptions/AppError';
+import { AppError } from '@common/exceptions/AppError';
 
 export class S3StorageProvider {
   private client: S3;

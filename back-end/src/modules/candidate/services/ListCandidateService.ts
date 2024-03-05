@@ -1,4 +1,4 @@
-import redisCache  from '@shared/cache/RedisCache';
+import redisCache  from '@common/cache/RedisCache';
 import { ICandidatePaginate } from '../domain/models/ICandidatePaginate';
 import { CandidateRepository } from '../repositories/CandidateRepository';
 

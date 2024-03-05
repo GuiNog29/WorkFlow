@@ -1,5 +1,5 @@
-import redisCache  from '@shared/cache/RedisCache';
-import { AppError } from '@shared/exceptions/AppError';
+import redisCache  from '@common/cache/RedisCache';
+import { AppError } from '@common/exceptions/AppError';
 import { GetCandidateByIdService } from './GetCandidateByIdService';
 import { CandidateRepository } from '../repositories/CandidateRepository';
 

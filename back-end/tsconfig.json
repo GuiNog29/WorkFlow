@@ -49,7 +49,7 @@
       "@modules/*": [
         "src/modules/*"
       ],
-      "@shared/*": [
+      "@common/*": [
         "src/common/*"
       ],
       "@infra/*": [
