@@ -1,4 +1,4 @@
-import { RedisCache } from '@shared/cache/RedisCache';
+import redisCache  from '@shared/cache/RedisCache';
 import { ICandidatePaginate } from '../domain/models/ICandidatePaginate';
 import { CandidateRepository } from '../repositories/CandidateRepository';
 
@@ -15,7 +15,6 @@ export class ListCandidateService {
   }
 
   public async execute({ page, limit }: SearchParams): Promise<ICandidatePaginate | null> {
-    const redisCache = new RedisCache();
     const take = limit;
     const skip = (Number(page) - 1) * take;
 

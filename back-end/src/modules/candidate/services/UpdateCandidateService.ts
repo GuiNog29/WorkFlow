@@ -1,5 +1,5 @@
+import redisCache  from '@shared/cache/RedisCache';
 import { UpdateResult } from 'typeorm';
-import { RedisCache } from '@shared/cache/RedisCache';
 import { AppError } from '@shared/exceptions/AppError';
 import { GetCandidateByIdService } from './GetCandidateByIdService';
 import { ValidCandidateDataService } from './ValidCandidateDataService';
@@ -18,7 +18,6 @@ export class UpdateCandidateService {
   }
 
   async execute(candidateId: number, { name, email }: IRequest): Promise<UpdateResult> {
-    const redisCache = new RedisCache();
     const getCandidateByIdService = new GetCandidateByIdService();
     const validCandidateDataService = new ValidCandidateDataService();
 
