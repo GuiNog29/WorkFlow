@@ -1,6 +1,6 @@
 import { hash } from 'bcryptjs';
 import { addHours, isAfter } from 'date-fns';
-import { AppError } from '@shared/exceptions/AppError';
+import { AppError } from '@common/exceptions/AppError';
 import { CandidateRepository } from '../repositories/CandidateRepository';
 import { UserTokensRepository } from '@modules/user/repositories/UserTokensRepository';
 

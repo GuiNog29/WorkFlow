@@ -2,7 +2,7 @@ import authConfig from '@config/auth';
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import { Candidate } from '../entities/Candidate';
-import { AppError } from '@shared/exceptions/AppError';
+import { AppError } from '@common/exceptions/AppError';
 import { CandidateRepository } from '../repositories/CandidateRepository';
 
 interface IRequest {

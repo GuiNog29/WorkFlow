@@ -2,7 +2,7 @@ import 'express-async-errors';
 import cors from 'cors';
 import uploadConfig from '@config/upload';
 import routes from '@modules/http/routes';
-import { AppError } from '@shared/exceptions/AppError';
+import { AppError } from '@common/exceptions/AppError';
 import rateLimiter from '@modules/http/middlewares/rateLimiter';
 import express, { NextFunction, Request, Response } from 'express';
 

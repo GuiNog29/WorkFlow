@@ -1,5 +1,5 @@
-import { AppError } from '@shared/exceptions/AppError';
-import { RedisCache } from '@shared/cache/RedisCache';
+import redisCache  from '@common/cache/RedisCache';
+import { AppError } from '@common/exceptions/AppError';
 import { GetCandidateByIdService } from './GetCandidateByIdService';
 import { CandidateRepository } from '../repositories/CandidateRepository';
 
@@ -12,7 +12,6 @@ export class DeleteCandidateService {
 
   async execute(candidateId: number): Promise<Boolean> {
     const getCandidateByIdService = new GetCandidateByIdService();
-    const redisCache = new RedisCache();
     const candidate = await getCandidateByIdService.execute(candidateId);
 
     if (!candidate) throw new AppError('Usuário não encontrado.');

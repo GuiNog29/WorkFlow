@@ -1,5 +1,5 @@
 import { compare, hash } from 'bcryptjs';
-import { AppError } from '@shared/exceptions/AppError';
+import { AppError } from '@common/exceptions/AppError';
 import { EmployerRepository } from '../repositories/EmployerRepository';
 import { Employer } from '../entities/Employer';
 import { GetEmployerByIdService } from './GetEmployerByIdService';

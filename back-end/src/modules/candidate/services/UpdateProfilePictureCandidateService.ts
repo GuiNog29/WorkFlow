@@ -1,11 +1,11 @@
 import upload from '@config/upload';
+import redisCache  from '@common/cache/RedisCache';
 import { Candidate } from '../entities/Candidate';
-import { RedisCache } from '@shared/cache/RedisCache';
-import { AppError } from '@shared/exceptions/AppError';
+import { AppError } from '@common/exceptions/AppError';
 import { GetCandidateByIdService } from './GetCandidateByIdService';
 import { CandidateRepository } from '../repositories/CandidateRepository';
-import { DiskStorageProvider } from '@shared/providers/StorageProvider/DiskStorageProvider';
-import { S3StorageProvider } from '@shared/providers/StorageProvider/S3StorageProvider';
+import { DiskStorageProvider } from '@common/providers/StorageProvider/DiskStorageProvider';
+import { S3StorageProvider } from '@common/providers/StorageProvider/S3StorageProvider';
 
 interface IRequest {
   candidateId: string;
@@ -20,7 +20,6 @@ export class UpdateProfilePictureCandidateService {
   }
 
   async execute({ candidateId, fileName }: IRequest): Promise<Candidate | null> {
-    const redisCache = new RedisCache();
     const getCandidateByIdService = new GetCandidateByIdService();
     const candidate = await getCandidateByIdService.execute(Number(candidateId));
     let profilePicFileName = '';

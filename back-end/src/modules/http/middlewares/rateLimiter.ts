@@ -1,5 +1,5 @@
 import Redis from 'ioredis';
-import { AppError } from '@shared/exceptions/AppError';
+import { AppError } from '@common/exceptions/AppError';
 import { RateLimiterRedis } from 'rate-limiter-flexible';
 import { Request, Response, NextFunction } from 'express';
 

@@ -1,7 +1,7 @@
+import redisCache  from '@common/cache/RedisCache';
 import { compare, hash } from 'bcryptjs';
 import { Candidate } from '../entities/Candidate';
-import { RedisCache } from '@shared/cache/RedisCache';
-import { AppError } from '@shared/exceptions/AppError';
+import { AppError } from '@common/exceptions/AppError';
 import { GetCandidateByIdService } from './GetCandidateByIdService';
 import { CandidateRepository } from '../repositories/CandidateRepository';
 
@@ -27,7 +27,6 @@ export default class UpdateProfileCandidateService {
     password,
     oldPassword,
   }: IRequest): Promise<Candidate | null> {
-    const redisCache = new RedisCache();
     const getCandidateByIdService = new GetCandidateByIdService();
     const candidate = await getCandidateByIdService.execute(Number(userId));
 

@@ -1,4 +1,4 @@
-import { AppError } from '@shared/exceptions/AppError';
+import { AppError } from '@common/exceptions/AppError';
 
 export class ValidEmployerDataService {
   public async execute(name: string, email: string) {
