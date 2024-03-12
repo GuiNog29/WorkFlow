@@ -1,12 +1,11 @@
 import { UpdateResult } from 'typeorm';
-import { Employer } from '@modules/employer/entities/Employer';
 import { IEmployer } from '@modules/employer/domain/models/IEmployer';
 
 export interface IEmployerRepository {
-  create({ companyName, cnpj, email, password }: IEmployer): Promise<Employer>;
+  create({ companyName, cnpj, email, password }: IEmployer): Promise<IEmployer>;
   update(employerId: number, { companyName, email }: IEmployer): Promise<UpdateResult>;
-  getEmployerById(employerId: number): Promise<Employer | null>;
+  getEmployerById(employerId: number): Promise<IEmployer | null>;
   delete(employerId: number): Promise<Boolean>;
-  findEmployerByCnpj(cnpj: string): Promise<Employer | null>;
-  findEmployerByEmail(email: string): Promise<Employer | null>;
+  findEmployerByCnpj(cnpj: string): Promise<IEmployer | null>;
+  findEmployerByEmail(email: string): Promise<IEmployer | null>;
 }
