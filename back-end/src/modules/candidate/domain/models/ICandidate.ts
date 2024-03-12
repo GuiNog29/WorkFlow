@@ -4,6 +4,6 @@ export interface ICandidate {
   email: string;
   password: string;
   profile_picture?: string;
-  created_at?: Date;
-  updated_at?: Date;
+  created_at: Date;
+  updated_at: Date;
 }

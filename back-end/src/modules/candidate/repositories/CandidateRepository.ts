@@ -13,10 +13,6 @@ export class CandidateRepository implements ICandidateRepository {
     this.candidateRepository = dataSource.getRepository(Candidate);
   }
 
-  findCpfOrEmail(cpf: string, email: string): Promise<Candidate | null> {
-    throw new Error('Method not implemented.');
-  }
-
   async create({ name, cpf, email, password }: ICandidate): Promise<Candidate> {
     const hashedPassword = await hash(password, 8);
     const newCandidate = this.candidateRepository.create({

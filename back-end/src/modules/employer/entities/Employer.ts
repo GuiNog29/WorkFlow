@@ -5,9 +5,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { IEmployer } from '../domain/models/IEmployer';
 
 @Entity('employers')
-export class Employer {
+export class Employer implements IEmployer {
   @PrimaryGeneratedColumn()
   id: number;
 

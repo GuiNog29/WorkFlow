@@ -1,5 +1,4 @@
 import { UpdateResult } from 'typeorm';
-import { Candidate } from '@modules/candidate/entities/Candidate';
 import { ICandidate } from '@modules/candidate/domain/models/ICandidate';
 import { ICandidatePaginate } from '@modules/candidate/domain/models/ICandidatePaginate';
 
@@ -10,13 +9,12 @@ export type SearchParams = {
 };
 
 export interface ICandidateRepository {
-  create({ name, email, password }: ICandidate): Promise<Candidate>;
+  create({ name, email, password }: ICandidate): Promise<ICandidate>;
   update(candidateId: number, { name, email, password }: ICandidate): Promise<UpdateResult>;
-  getCandidateById(candidateId: number): Promise<Candidate | null>;
+  getCandidateById(candidateId: number): Promise<ICandidate | null>;
   delete(candidateId: number): Promise<Boolean>;
-  findCandidateByCpf(cpf: string): Promise<Candidate | null>;
-  findCandidateByEmail(email: string): Promise<Candidate | null>;
-  findCpfOrEmail(cpf: string, email: string): Promise<Candidate | null>;
+  findCandidateByCpf(cpf: string): Promise<ICandidate | null>;
+  findCandidateByEmail(email: string): Promise<ICandidate | null>;
   findAll({ page, skip, take }: SearchParams): Promise<ICandidatePaginate>;
-  save(candidate: Candidate): Promise<void>;
+  save(candidate: ICandidate): Promise<void>;
 }

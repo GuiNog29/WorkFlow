@@ -6,9 +6,10 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
+import { ICandidate } from '../domain/models/ICandidate';
 
 @Entity('candidates')
-export class Candidate {
+export class Candidate implements ICandidate {
   @PrimaryGeneratedColumn()
   id: number;
 
