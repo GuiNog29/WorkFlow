@@ -1,6 +1,6 @@
 import redisCache  from '@common/cache/RedisCache';
 import { ICandidatePaginate } from '../domain/models/ICandidatePaginate';
-import { CandidateRepository } from '../repositories/CandidateRepository';
+import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
 
 interface SearchParams {
   page: number;
@@ -8,10 +8,8 @@ interface SearchParams {
 }
 
 export class ListCandidateService {
-  private candidateRepository: CandidateRepository;
-
-  constructor() {
-    this.candidateRepository = new CandidateRepository();
+  constructor(private candidateRepository: ICandidateRepository) {
+    this.candidateRepository = candidateRepository;
   }
 
   public async execute({ page, limit }: SearchParams): Promise<ICandidatePaginate | null> {

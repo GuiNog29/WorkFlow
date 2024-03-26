@@ -3,7 +3,7 @@ import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import { Candidate } from '../entities/Candidate';
 import { AppError } from '@common/exceptions/AppError';
-import { CandidateRepository } from '../repositories/CandidateRepository';
+import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
 
 interface IRequest {
   cpf: string;
@@ -17,10 +17,8 @@ interface IResponse {
 }
 
 export class CreateSessionCandidateService {
-  private candidateRepository: CandidateRepository;
-
-  constructor() {
-    this.candidateRepository = new CandidateRepository();
+  constructor(private candidateRepository: ICandidateRepository) {
+    this.candidateRepository = candidateRepository;
   }
 
   public async execute({ cpf, email, password }: IRequest): Promise<IResponse> {

@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Exclude, Expose } from 'class-transformer';
 import { IEmployer } from '../domain/models/IEmployer';
 
 @Entity('employers')
@@ -22,6 +23,7 @@ export class Employer implements IEmployer {
   email: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @Column({ nullable: true })
@@ -32,4 +34,11 @@ export class Employer implements IEmployer {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @Expose({ name: 'profile_picture_url' })
+  getProfilePictureUrl(): string | null {
+    if (!this.profile_picture) return null;
+
+    return `${process.env.APP_API_URL}/files/${this.profile_picture}`;
+  }
 }

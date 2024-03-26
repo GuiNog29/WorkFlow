@@ -1,11 +1,9 @@
-import { AppError } from "@common/exceptions/AppError";
-import { CandidateRepository } from "../repositories/CandidateRepository";
+import { AppError } from '@common/exceptions/AppError';
+import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
 
 export class ValidCandidateExistService {
-  private candidateRepository: CandidateRepository;
-
-  constructor() {
-    this.candidateRepository = new CandidateRepository();
+  constructor(private candidateRepository: ICandidateRepository) {
+    this.candidateRepository = candidateRepository;
   }
 
   public async execute(cpf: string, email: string) {

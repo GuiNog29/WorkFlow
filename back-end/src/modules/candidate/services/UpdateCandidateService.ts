@@ -1,9 +1,10 @@
-import redisCache  from '@common/cache/RedisCache';
+import redisCache from '@common/cache/RedisCache';
 import { UpdateResult } from 'typeorm';
 import { AppError } from '@common/exceptions/AppError';
 import { GetCandidateByIdService } from './GetCandidateByIdService';
 import { ValidCandidateDataService } from './ValidCandidateDataService';
 import { CandidateRepository } from '../repositories/CandidateRepository';
+import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
 
 interface IRequest {
   name: string;
@@ -11,18 +12,19 @@ interface IRequest {
 }
 
 export class UpdateCandidateService {
-  private candidateRepository: CandidateRepository;
-
-  constructor() {
-    this.candidateRepository = new CandidateRepository();
+  constructor(
+    private candidateRepository: ICandidateRepository,
+    private getCandidateByIdService: GetCandidateByIdService,
+    private validCandidateDataService: ValidCandidateDataService,
+  ) {
+    this.candidateRepository = candidateRepository;
+    this.getCandidateByIdService = getCandidateByIdService;
+    this.validCandidateDataService = validCandidateDataService;
   }
 
   async execute(candidateId: number, { name, email }: IRequest): Promise<UpdateResult> {
-    const getCandidateByIdService = new GetCandidateByIdService();
-    const validCandidateDataService = new ValidCandidateDataService();
-
-    await validCandidateDataService.execute(name, email);
-    const candidate = await getCandidateByIdService.execute(candidateId);
+    await this.validCandidateDataService.execute(name, email);
+    const candidate = await this.getCandidateByIdService.execute(candidateId);
 
     if (!candidate) throw new AppError('Usuário não encontrado.');
 

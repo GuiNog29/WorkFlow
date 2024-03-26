@@ -12,7 +12,7 @@ export class EmployerRepository implements IEmployerRepository {
     this.employerRepository = dataSource.getRepository(Employer);
   }
 
-  async create({ companyName, cnpj, email, password }: IEmployer): Promise<Employer> {
+  async create({ companyName, cnpj, email, password }: IEmployer): Promise<IEmployer> {
     const hashedPassword = await hash(password, 8);
 
     const newEmployer = this.employerRepository.create({
@@ -33,12 +33,12 @@ export class EmployerRepository implements IEmployerRepository {
     });
   }
 
-  async updateProfilePicture(employerId: number, fileName: string): Promise<Employer | null> {
-    await this.employerRepository.update(employerId, { profile_picture: fileName })
+  async updateProfilePicture(employerId: number, fileName: string): Promise<IEmployer | null> {
+    await this.employerRepository.update(employerId, { profile_picture: fileName });
     return this.getEmployerById(employerId);
   }
 
-  async getEmployerById(employerId: number): Promise<Employer | null> {
+  async getEmployerById(employerId: number): Promise<IEmployer | null> {
     return await this.employerRepository.findOneBy({ id: employerId });
   }
 
@@ -47,24 +47,21 @@ export class EmployerRepository implements IEmployerRepository {
     return deleteResult.affected === 1;
   }
 
-  async findEmployerByCnpj(cnpj: string): Promise<Employer | null> {
+  async findEmployerByCnpj(cnpj: string): Promise<IEmployer | null> {
     return await this.employerRepository.findOneBy({ cnpj });
   }
 
-  async findEmployerByEmail(email: string): Promise<Employer | null> {
+  async findEmployerByEmail(email: string): Promise<IEmployer | null> {
     return await this.employerRepository.findOneBy({ email });
   }
 
-  findEmployer(cnpj: string, email: string): Promise<Employer | null> {
+  findEmployer(cnpj: string, email: string): Promise<IEmployer | null> {
     return this.employerRepository.findOne({
-      where: [
-        { cnpj: cnpj },
-        { email: email }
-      ]
+      where: [{ cnpj: cnpj }, { email: email }],
     });
   }
 
-  async save(employer: Employer): Promise<void>{
+  async save(employer: IEmployer): Promise<void> {
     await this.employerRepository.save(employer);
   }
 }

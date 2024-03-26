@@ -12,12 +12,12 @@ interface IRequest {
 }
 
 export class SendForgotPasswordEmailCandidateService {
-  private candidateRepository: CandidateRepository;
-  private userTokenRepository: UserTokensRepository;
-
-  constructor() {
-    this.candidateRepository = new CandidateRepository();
-    this.userTokenRepository = new UserTokensRepository();
+  constructor(
+    private candidateRepository: CandidateRepository,
+    private userTokenRepository: UserTokensRepository,
+  ) {
+    this.candidateRepository = candidateRepository;
+    this.userTokenRepository = userTokenRepository;
   }
 
   public async execute({ userType, email }: IRequest): Promise<void> {
