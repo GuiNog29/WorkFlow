@@ -1,12 +1,10 @@
 import { Candidate } from '../entities/Candidate';
 import { AppError } from '@common/exceptions/AppError';
-import { CandidateRepository } from '../repositories/CandidateRepository';
+import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
 
 export class GetCandidateByIdService {
-  private candidateRepository: CandidateRepository;
-
-  constructor() {
-    this.candidateRepository = new CandidateRepository();
+  constructor(private candidateRepository: ICandidateRepository) {
+    this.candidateRepository = candidateRepository;
   }
 
   async execute(candidateId: number): Promise<Candidate | null> {

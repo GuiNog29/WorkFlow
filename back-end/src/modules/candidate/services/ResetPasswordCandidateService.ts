@@ -10,12 +10,12 @@ interface IRequest {
 }
 
 export class ResetPasswordCandidateService {
-  private candidateRepository: CandidateRepository;
-  private userTokenRepository: UserTokensRepository;
-
-  constructor() {
-    this.candidateRepository = new CandidateRepository();
-    this.userTokenRepository = new UserTokensRepository();
+  constructor(
+    private candidateRepository: CandidateRepository,
+    private userTokenRepository: UserTokensRepository,
+  ) {
+    this.candidateRepository = candidateRepository;
+    this.userTokenRepository = userTokenRepository;
   }
 
   public async execute({ token, password }: IRequest): Promise<void> {

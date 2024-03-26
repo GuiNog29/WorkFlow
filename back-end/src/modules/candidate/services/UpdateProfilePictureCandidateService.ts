@@ -1,11 +1,11 @@
 import upload from '@config/upload';
-import redisCache  from '@common/cache/RedisCache';
+import redisCache from '@common/cache/RedisCache';
 import { Candidate } from '../entities/Candidate';
 import { AppError } from '@common/exceptions/AppError';
 import { GetCandidateByIdService } from './GetCandidateByIdService';
-import { CandidateRepository } from '../repositories/CandidateRepository';
 import { DiskStorageProvider } from '@common/providers/StorageProvider/DiskStorageProvider';
 import { S3StorageProvider } from '@common/providers/StorageProvider/S3StorageProvider';
+import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
 
 interface IRequest {
   candidateId: string;
@@ -13,16 +13,17 @@ interface IRequest {
 }
 
 export class UpdateProfilePictureCandidateService {
-  private candidateRepository: CandidateRepository;
-
-  constructor() {
-    this.candidateRepository = new CandidateRepository();
+  constructor(
+    private candidateRepository: ICandidateRepository,
+    private getCandidateByIdService: GetCandidateByIdService,
+  ) {
+    this.candidateRepository = candidateRepository;
+    this.getCandidateByIdService = getCandidateByIdService;
   }
 
   async execute({ candidateId, fileName }: IRequest): Promise<Candidate | null> {
-    const getCandidateByIdService = new GetCandidateByIdService();
-    const candidate = await getCandidateByIdService.execute(Number(candidateId));
     let profilePicFileName = '';
+    const candidate = await this.getCandidateByIdService.execute(Number(candidateId));
     if (!candidate) throw new AppError('Usuário não encontrado.');
 
     if (upload.driver === 's3') {

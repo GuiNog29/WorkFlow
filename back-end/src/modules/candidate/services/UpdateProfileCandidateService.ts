@@ -3,7 +3,7 @@ import { compare, hash } from 'bcryptjs';
 import { Candidate } from '../entities/Candidate';
 import { AppError } from '@common/exceptions/AppError';
 import { GetCandidateByIdService } from './GetCandidateByIdService';
-import { CandidateRepository } from '../repositories/CandidateRepository';
+import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
 
 interface IRequest {
   userId: string;
@@ -14,10 +14,12 @@ interface IRequest {
 }
 
 export default class UpdateProfileCandidateService {
-  private candidateRepository: CandidateRepository;
-
-  constructor() {
-    this.candidateRepository = new CandidateRepository();
+  constructor(
+    private candidateRepository: ICandidateRepository,
+    private getCandidateByIdService: GetCandidateByIdService,
+  ) {
+    this.candidateRepository = candidateRepository;
+    this.getCandidateByIdService = getCandidateByIdService;
   }
 
   public async execute({
@@ -27,8 +29,7 @@ export default class UpdateProfileCandidateService {
     password,
     oldPassword,
   }: IRequest): Promise<Candidate | null> {
-    const getCandidateByIdService = new GetCandidateByIdService();
-    const candidate = await getCandidateByIdService.execute(Number(userId));
+    const candidate = await this.getCandidateByIdService.execute(Number(userId));
 
     if (!candidate) throw new AppError('Usuário não encontrado.');
 

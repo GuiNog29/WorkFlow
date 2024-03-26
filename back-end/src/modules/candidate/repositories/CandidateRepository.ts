@@ -5,6 +5,7 @@ import { Repository, UpdateResult } from 'typeorm';
 import { ICandidateRepository, SearchParams } from './interface/ICandidateRepository';
 import { ICandidate } from '@modules/candidate/domain/models/ICandidate';
 import { ICandidatePaginate } from '../domain/models/ICandidatePaginate';
+import { ICreateCandidate } from '../domain/models/ICreateCandidate';
 
 export class CandidateRepository implements ICandidateRepository {
   private candidateRepository: Repository<Candidate>;
@@ -13,7 +14,7 @@ export class CandidateRepository implements ICandidateRepository {
     this.candidateRepository = dataSource.getRepository(Candidate);
   }
 
-  async create({ name, cpf, email, password }: ICandidate): Promise<Candidate> {
+  async create({ name, cpf, email, password }: ICreateCandidate): Promise<ICandidate> {
     const hashedPassword = await hash(password, 8);
     const newCandidate = this.candidateRepository.create({
       name,
@@ -30,12 +31,12 @@ export class CandidateRepository implements ICandidateRepository {
     return await this.candidateRepository.update(candidateId, { name, email, password });
   }
 
-  async updateProfilePicture(candidateId: number, fileName: string): Promise<Candidate | null> {
+  async updateProfilePicture(candidateId: number, fileName: string): Promise<ICandidate | null> {
     await this.candidateRepository.update(candidateId, { profile_picture: fileName })
     return this.getCandidateById(candidateId);
   }
 
-  async getCandidateById(candidateId: number): Promise<Candidate | null> {
+  async getCandidateById(candidateId: number): Promise<ICandidate | null> {
     return await this.candidateRepository.findOneBy({ id: candidateId });
   }
 
@@ -61,15 +62,15 @@ export class CandidateRepository implements ICandidateRepository {
     return result;
   }
 
-  async findCandidateByCpf(cpf: string): Promise<Candidate | null> {
+  async findCandidateByCpf(cpf: string): Promise<ICandidate | null> {
     return await this.candidateRepository.findOneBy({ cpf });
   }
 
-  async findCandidateByEmail(email: string): Promise<Candidate | null> {
+  async findCandidateByEmail(email: string): Promise<ICandidate | null> {
     return await this.candidateRepository.findOneBy({ email });
   }
 
-  async findCandidate(cpf: string, email: string): Promise<Candidate | null> {
+  async findCandidate(cpf: string, email: string): Promise<ICandidate | null> {
     return this.candidateRepository.findOne({
       where: [{ cpf: cpf }, { email: email }],
     });
