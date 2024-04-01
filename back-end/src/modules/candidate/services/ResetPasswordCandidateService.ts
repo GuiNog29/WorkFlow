@@ -1,8 +1,8 @@
 import { hash } from 'bcryptjs';
 import { addHours, isAfter } from 'date-fns';
 import { AppError } from '@common/exceptions/AppError';
-import { CandidateRepository } from '../repositories/CandidateRepository';
-import { UserTokensRepository } from '@modules/user/repositories/UserTokensRepository';
+import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
+import { IUserTokensRepository } from '@modules/user/repositories/interface/IUserTokensRepository';
 
 interface IRequest {
   token: string;
@@ -11,8 +11,8 @@ interface IRequest {
 
 export class ResetPasswordCandidateService {
   constructor(
-    private candidateRepository: CandidateRepository,
-    private userTokenRepository: UserTokensRepository,
+    private candidateRepository: ICandidateRepository,
+    private userTokenRepository: IUserTokensRepository,
   ) {
     this.candidateRepository = candidateRepository;
     this.userTokenRepository = userTokenRepository;

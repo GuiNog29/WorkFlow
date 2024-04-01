@@ -1,8 +1,8 @@
 import { hash } from 'bcryptjs';
 import { addHours, isAfter } from 'date-fns';
 import { AppError } from '@common/exceptions/AppError';
-import { EmployerRepository } from '../repositories/EmployerRepository';
 import { UserTokensRepository } from '@modules/user/repositories/UserTokensRepository';
+import { IEmployerRepository } from '../repositories/interface/IEmployerRepository';
 
 interface IRequest {
   token: string;
@@ -10,12 +10,12 @@ interface IRequest {
 }
 
 export class ResetPasswordEmployerService {
-  private employerRepository: EmployerRepository;
-  private userTokenRepository: UserTokensRepository;
-
-  constructor() {
-    this.employerRepository = new EmployerRepository();
-    this.userTokenRepository = new UserTokensRepository();
+  constructor(
+    private employerRepository: IEmployerRepository,
+    private userTokenRepository: UserTokensRepository,
+  ) {
+    this.employerRepository = employerRepository;
+    this.userTokenRepository = userTokenRepository;
   }
 
   public async execute({ token, password }: IRequest): Promise<void> {

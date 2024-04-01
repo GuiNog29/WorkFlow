@@ -2,10 +2,8 @@ import { AppError } from '@common/exceptions/AppError';
 import { EmployerRepository } from '../repositories/EmployerRepository';
 
 export class ValidEmployerExistService {
-  private employerRepository: EmployerRepository;
-
-  constructor() {
-    this.employerRepository = new EmployerRepository();
+  constructor(private employerRepository: EmployerRepository) {
+    this.employerRepository = employerRepository;
   }
 
   public async execute(cnpj: string, email: string) {

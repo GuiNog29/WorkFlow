@@ -3,8 +3,8 @@ import SESMail from '@config/mail/SESMail';
 import mailConfig from '@config/mail/mail';
 import EtheralMail from '@config/mail/EtherealMail';
 import { AppError } from '@common/exceptions/AppError';
-import { CandidateRepository } from '../repositories/CandidateRepository';
-import { UserTokensRepository } from '@modules/user/repositories/UserTokensRepository';
+import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
+import { IUserTokensRepository } from '@modules/user/repositories/interface/IUserTokensRepository';
 
 interface IRequest {
   email: string;
@@ -13,8 +13,8 @@ interface IRequest {
 
 export class SendForgotPasswordEmailCandidateService {
   constructor(
-    private candidateRepository: CandidateRepository,
-    private userTokenRepository: UserTokensRepository,
+    private candidateRepository: ICandidateRepository,
+    private userTokenRepository: IUserTokensRepository,
   ) {
     this.candidateRepository = candidateRepository;
     this.userTokenRepository = userTokenRepository;

@@ -1,17 +1,18 @@
 import { AppError } from '@common/exceptions/AppError';
 import { GetEmployerByIdService } from './GetEmployerByIdService';
-import { EmployerRepository } from '../repositories/EmployerRepository';
+import { IEmployerRepository } from '../repositories/interface/IEmployerRepository';
 
 export class DeleteEmployerService {
-  private employerRepository: EmployerRepository;
-
-  constructor() {
-    this.employerRepository = new EmployerRepository();
+  constructor(
+    private employerRepository: IEmployerRepository,
+    private getEmployerByIdService: GetEmployerByIdService,
+  ) {
+    this.employerRepository = employerRepository;
+    this.getEmployerByIdService = getEmployerByIdService;
   }
 
   public async execute(employerId: number): Promise<Boolean> {
-    const getEmployerByIdService = new GetEmployerByIdService();
-    const employer = await getEmployerByIdService.execute(employerId);
+    const employer = await this.getEmployerByIdService.execute(employerId);
 
     if (!employer) throw new AppError('Usuário não encontrado.');
 
