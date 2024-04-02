@@ -1,9 +1,14 @@
+import { inject, injectable } from 'tsyringe';
 import { AppError } from '@common/exceptions/AppError';
 import { IEmployer } from '../domain/models/IEmployer';
 import { IEmployerRepository } from '../repositories/interface/IEmployerRepository';
 
+@injectable()
 export class GetEmployerByIdService {
-  constructor(private employerRepository: IEmployerRepository) {
+  constructor(
+    @inject('EmployerRepository')
+    private employerRepository: IEmployerRepository,
+  ) {
     this.employerRepository = employerRepository;
   }
 

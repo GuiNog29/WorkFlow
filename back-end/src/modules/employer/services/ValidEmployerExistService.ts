@@ -1,8 +1,13 @@
+import { inject, injectable } from 'tsyringe';
 import { AppError } from '@common/exceptions/AppError';
 import { EmployerRepository } from '../repositories/EmployerRepository';
 
+@injectable()
 export class ValidEmployerExistService {
-  constructor(private employerRepository: EmployerRepository) {
+  constructor(
+    @inject('EmployerRepository')
+    private employerRepository: EmployerRepository,
+  ) {
     this.employerRepository = employerRepository;
   }
 

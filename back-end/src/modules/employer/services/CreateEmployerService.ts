@@ -1,10 +1,13 @@
 import { IEmployer } from '../domain/models/IEmployer';
+import { inject, injectable } from 'tsyringe';
 import { IEmployerRepository } from '../repositories/interface/IEmployerRepository';
 import { ValidEmployerDataService } from './ValidEmployerDataService';
 import { ValidEmployerExistService } from './ValidEmployerExistService';
 
+@injectable()
 export class CreateEmployerService {
   constructor(
+    @inject('EmployerRepository')
     private employerRepository: IEmployerRepository,
     private validEmployerExistService: ValidEmployerExistService,
     private validEmployerDataService: ValidEmployerDataService,

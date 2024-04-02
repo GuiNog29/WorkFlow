@@ -1,6 +1,7 @@
 import path from 'path';
 import SESMail from '@config/mail/SESMail';
 import mailConfig from '@config/mail/mail';
+import { inject, injectable } from 'tsyringe';
 import EtheralMail from '@config/mail/EtherealMail';
 import { AppError } from '@common/exceptions/AppError';
 import { UserTokensRepository } from '@modules/user/repositories/UserTokensRepository';
@@ -11,8 +12,10 @@ interface IRequest {
   userType: number;
 }
 
+@injectable()
 export class SendForgotPasswordEmailEmployerService {
   constructor(
+    @inject('EmployerRepository')
     private employerRepository: IEmployerRepository,
     private userTokenRepository: UserTokensRepository,
   ) {

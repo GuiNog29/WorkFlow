@@ -1,4 +1,5 @@
 import upload from '@config/upload';
+import { inject, injectable } from 'tsyringe';
 import redisCache from '@common/cache/RedisCache';
 import { Candidate } from '../entities/Candidate';
 import { AppError } from '@common/exceptions/AppError';
@@ -12,8 +13,10 @@ interface IRequest {
   fileName: string;
 }
 
+@injectable()
 export class UpdateProfilePictureCandidateService {
   constructor(
+    @inject('CandidateRepository')
     private candidateRepository: ICandidateRepository,
     private getCandidateByIdService: GetCandidateByIdService,
   ) {

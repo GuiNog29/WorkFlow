@@ -1,8 +1,11 @@
 import { AppError } from '@common/exceptions/AppError';
+import { inject } from 'tsyringe';
 import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
 
 export class ValidCandidateExistService {
-  constructor(private candidateRepository: ICandidateRepository) {
+  constructor(
+    @inject('CandidateRepository')
+    private candidateRepository: ICandidateRepository) {
     this.candidateRepository = candidateRepository;
   }
 

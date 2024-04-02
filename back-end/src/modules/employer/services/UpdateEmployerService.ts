@@ -1,4 +1,5 @@
 import { UpdateResult } from 'typeorm';
+import { inject, injectable } from 'tsyringe';
 import { AppError } from '@common/exceptions/AppError';
 import { GetEmployerByIdService } from './GetEmployerByIdService';
 import { ValidEmployerDataService } from './ValidEmployerDataService';
@@ -9,8 +10,10 @@ interface IRequest {
   email: string;
 }
 
+@injectable()
 export class UpdateEmployerService {
   constructor(
+    @inject('EmployerRepository')
     private employerRepository: IEmployerRepository,
     private getEmployerByIdService: GetEmployerByIdService,
     private validEmployerDataService: ValidEmployerDataService,

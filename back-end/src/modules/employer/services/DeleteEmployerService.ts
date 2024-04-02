@@ -1,9 +1,12 @@
+import { inject, injectable } from 'tsyringe';
 import { AppError } from '@common/exceptions/AppError';
 import { GetEmployerByIdService } from './GetEmployerByIdService';
 import { IEmployerRepository } from '../repositories/interface/IEmployerRepository';
 
+@injectable()
 export class DeleteEmployerService {
   constructor(
+    @inject('EmployerRepository')
     private employerRepository: IEmployerRepository,
     private getEmployerByIdService: GetEmployerByIdService,
   ) {

@@ -1,5 +1,6 @@
 import redisCache from '@common/cache/RedisCache';
 import { UpdateResult } from 'typeorm';
+import { inject, injectable } from 'tsyringe';
 import { AppError } from '@common/exceptions/AppError';
 import { GetCandidateByIdService } from './GetCandidateByIdService';
 import { ValidCandidateDataService } from './ValidCandidateDataService';
@@ -11,8 +12,10 @@ interface IRequest {
   email: string;
 }
 
+@injectable()
 export class UpdateCandidateService {
   constructor(
+    @inject('CandidateRepository')
     private candidateRepository: ICandidateRepository,
     private getCandidateByIdService: GetCandidateByIdService,
     private validCandidateDataService: ValidCandidateDataService,

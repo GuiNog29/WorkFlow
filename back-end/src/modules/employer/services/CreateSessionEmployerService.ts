@@ -1,6 +1,7 @@
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import authConfig from '@config/auth';
+import { inject, injectable } from 'tsyringe';
 import { Employer } from '../entities/Employer';
 import { AppError } from '@common/exceptions/AppError';
 import { IEmployerRepository } from '../repositories/interface/IEmployerRepository';
@@ -16,8 +17,12 @@ interface IResponse {
   token: string;
 }
 
+@injectable()
 export class CreateSessionEmployerService {
-  constructor(private employerRepository: IEmployerRepository) {
+  constructor(
+    @inject('EmployerRepository')
+    private employerRepository: IEmployerRepository,
+  ) {
     this.employerRepository = employerRepository;
   }
 

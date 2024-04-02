@@ -1,6 +1,6 @@
 import { compare, hash } from 'bcryptjs';
 import { AppError } from '@common/exceptions/AppError';
-import { EmployerRepository } from '../repositories/EmployerRepository';
+import { inject, injectable } from 'tsyringe';
 import { Employer } from '../entities/Employer';
 import { GetEmployerByIdService } from './GetEmployerByIdService';
 import { IEmployerRepository } from '../repositories/interface/IEmployerRepository';
@@ -13,8 +13,10 @@ interface IRequest {
   oldPassword?: string;
 }
 
+@injectable()
 export default class UpdateProfileCandidateService {
   constructor(
+    @inject('EmployerRepository')
     private employerRepository: IEmployerRepository,
     private getEmployerByIdService: GetEmployerByIdService,
   ) {
