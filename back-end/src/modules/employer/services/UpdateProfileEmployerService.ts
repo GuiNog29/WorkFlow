@@ -1,8 +1,9 @@
 import { compare, hash } from 'bcryptjs';
 import { AppError } from '@common/exceptions/AppError';
-import { EmployerRepository } from '../repositories/EmployerRepository';
+import { inject, injectable } from 'tsyringe';
 import { Employer } from '../entities/Employer';
 import { GetEmployerByIdService } from './GetEmployerByIdService';
+import { IEmployerRepository } from '../repositories/interface/IEmployerRepository';
 
 interface IRequest {
   userId: string;
@@ -12,11 +13,15 @@ interface IRequest {
   oldPassword?: string;
 }
 
+@injectable()
 export default class UpdateProfileCandidateService {
-  private employerRepository: EmployerRepository;
-
-  constructor() {
-    this.employerRepository = new EmployerRepository();
+  constructor(
+    @inject('EmployerRepository')
+    private employerRepository: IEmployerRepository,
+    private getEmployerByIdService: GetEmployerByIdService,
+  ) {
+    this.employerRepository = employerRepository;
+    this.getEmployerByIdService = getEmployerByIdService;
   }
 
   public async execute({
@@ -26,8 +31,7 @@ export default class UpdateProfileCandidateService {
     password,
     oldPassword,
   }: IRequest): Promise<Employer | null> {
-    const getEmployerByIdService = new GetEmployerByIdService();
-    const employer = await getEmployerByIdService.execute(Number(userId));
+    const employer = await this.getEmployerByIdService.execute(Number(userId));
 
     if (!employer) throw new AppError('Usuário não encontrado.');
 

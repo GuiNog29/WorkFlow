@@ -1,10 +1,13 @@
 import redisCache from '@common/cache/RedisCache';
+import { inject, injectable } from 'tsyringe';
 import { AppError } from '@common/exceptions/AppError';
 import { GetCandidateByIdService } from './GetCandidateByIdService';
 import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
 
+@injectable()
 export class DeleteCandidateService {
   constructor(
+    @inject('CandidateRepository')
     private candidateRepository: ICandidateRepository,
     private getCandidateByIdService: GetCandidateByIdService,
   ) {

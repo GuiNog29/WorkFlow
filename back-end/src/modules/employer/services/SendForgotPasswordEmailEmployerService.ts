@@ -1,23 +1,26 @@
 import path from 'path';
 import SESMail from '@config/mail/SESMail';
 import mailConfig from '@config/mail/mail';
+import { inject, injectable } from 'tsyringe';
 import EtheralMail from '@config/mail/EtherealMail';
 import { AppError } from '@common/exceptions/AppError';
-import { EmployerRepository } from '../repositories/EmployerRepository';
 import { UserTokensRepository } from '@modules/user/repositories/UserTokensRepository';
+import { IEmployerRepository } from '../repositories/interface/IEmployerRepository';
 
 interface IRequest {
   email: string;
   userType: number;
 }
 
+@injectable()
 export class SendForgotPasswordEmailEmployerService {
-  private employerRepository: EmployerRepository;
-  private userTokenRepository: UserTokensRepository;
-
-  constructor() {
-    this.employerRepository = new EmployerRepository();
-    this.userTokenRepository = new UserTokensRepository();
+  constructor(
+    @inject('EmployerRepository')
+    private employerRepository: IEmployerRepository,
+    private userTokenRepository: UserTokensRepository,
+  ) {
+    this.employerRepository = employerRepository;
+    this.userTokenRepository = userTokenRepository;
   }
 
   public async execute({ userType, email }: IRequest): Promise<void> {

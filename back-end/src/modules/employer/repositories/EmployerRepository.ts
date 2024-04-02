@@ -4,15 +4,14 @@ import { dataSource } from 'src/infra/database';
 import { Repository, UpdateResult } from 'typeorm';
 import { IEmployer } from '@modules/employer/domain/models/IEmployer';
 import { IEmployerRepository } from './interface/IEmployerRepository';
+import { ICreateEmployer } from '../domain/models/ICreateEmployer';
 
 export class EmployerRepository implements IEmployerRepository {
-  private employerRepository: Repository<Employer>;
-
-  constructor() {
+  constructor(private employerRepository: Repository<Employer>) {
     this.employerRepository = dataSource.getRepository(Employer);
   }
 
-  async create({ companyName, cnpj, email, password }: IEmployer): Promise<IEmployer> {
+  async create({ companyName, cnpj, email, password }: ICreateEmployer): Promise<IEmployer> {
     const hashedPassword = await hash(password, 8);
 
     const newEmployer = this.employerRepository.create({

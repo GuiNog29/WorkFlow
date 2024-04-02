@@ -1,5 +1,6 @@
 import 'express-async-errors';
 import cors from 'cors';
+import '@common/container';
 import routes from '@infra/http/routes';
 import uploadConfig from '@config/upload';
 import { AppError } from '@common/exceptions/AppError';

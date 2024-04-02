@@ -1,9 +1,10 @@
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import authConfig from '@config/auth';
+import { inject, injectable } from 'tsyringe';
 import { Employer } from '../entities/Employer';
 import { AppError } from '@common/exceptions/AppError';
-import { EmployerRepository } from '../repositories/EmployerRepository';
+import { IEmployerRepository } from '../repositories/interface/IEmployerRepository';
 
 interface IRequest {
   cnpj: string;
@@ -16,11 +17,13 @@ interface IResponse {
   token: string;
 }
 
+@injectable()
 export class CreateSessionEmployerService {
-  private employerRepository: EmployerRepository;
-
-  constructor() {
-    this.employerRepository = new EmployerRepository();
+  constructor(
+    @inject('EmployerRepository')
+    private employerRepository: IEmployerRepository,
+  ) {
+    this.employerRepository = employerRepository;
   }
 
   public async execute({ cnpj, email, password }: IRequest): Promise<IResponse> {

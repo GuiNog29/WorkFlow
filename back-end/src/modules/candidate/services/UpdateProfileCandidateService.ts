@@ -1,6 +1,7 @@
 import redisCache  from '@common/cache/RedisCache';
 import { compare, hash } from 'bcryptjs';
 import { Candidate } from '../entities/Candidate';
+import { inject, injectable } from 'tsyringe';
 import { AppError } from '@common/exceptions/AppError';
 import { GetCandidateByIdService } from './GetCandidateByIdService';
 import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
@@ -13,8 +14,10 @@ interface IRequest {
   oldPassword?: string;
 }
 
+@injectable()
 export default class UpdateProfileCandidateService {
   constructor(
+    @inject('CandidateRepository')
     private candidateRepository: ICandidateRepository,
     private getCandidateByIdService: GetCandidateByIdService,
   ) {

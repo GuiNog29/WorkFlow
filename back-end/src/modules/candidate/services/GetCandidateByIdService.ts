@@ -1,9 +1,14 @@
 import { Candidate } from '../entities/Candidate';
+import { inject, injectable } from 'tsyringe';
 import { AppError } from '@common/exceptions/AppError';
 import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
 
+@injectable()
 export class GetCandidateByIdService {
-  constructor(private candidateRepository: ICandidateRepository) {
+  constructor(
+    @inject('CandidateRepository')
+    private candidateRepository: ICandidateRepository,
+  ) {
     this.candidateRepository = candidateRepository;
   }
 

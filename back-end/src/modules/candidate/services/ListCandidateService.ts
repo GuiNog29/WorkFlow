@@ -1,4 +1,5 @@
-import redisCache  from '@common/cache/RedisCache';
+import redisCache from '@common/cache/RedisCache';
+import { inject, injectable } from 'tsyringe';
 import { ICandidatePaginate } from '../domain/models/ICandidatePaginate';
 import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
 
@@ -7,8 +8,12 @@ interface SearchParams {
   limit: number;
 }
 
+@injectable()
 export class ListCandidateService {
-  constructor(private candidateRepository: ICandidateRepository) {
+  constructor(
+    @inject('CandidateRepository')
+    private candidateRepository: ICandidateRepository,
+  ) {
     this.candidateRepository = candidateRepository;
   }
 

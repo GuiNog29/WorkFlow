@@ -1,11 +1,14 @@
+import { inject, injectable } from 'tsyringe';
 import { AppError } from '@common/exceptions/AppError';
 import { EmployerRepository } from '../repositories/EmployerRepository';
 
+@injectable()
 export class ValidEmployerExistService {
-  private employerRepository: EmployerRepository;
-
-  constructor() {
-    this.employerRepository = new EmployerRepository();
+  constructor(
+    @inject('EmployerRepository')
+    private employerRepository: EmployerRepository,
+  ) {
+    this.employerRepository = employerRepository;
   }
 
   public async execute(cnpj: string, email: string) {

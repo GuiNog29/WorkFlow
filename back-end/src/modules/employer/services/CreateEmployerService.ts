@@ -1,22 +1,25 @@
 import { IEmployer } from '../domain/models/IEmployer';
-import { Employer } from '../entities/Employer';
-import { EmployerRepository } from '../repositories/EmployerRepository';
+import { inject, injectable } from 'tsyringe';
+import { IEmployerRepository } from '../repositories/interface/IEmployerRepository';
 import { ValidEmployerDataService } from './ValidEmployerDataService';
 import { ValidEmployerExistService } from './ValidEmployerExistService';
 
+@injectable()
 export class CreateEmployerService {
-  private employerRepository: EmployerRepository;
-
-  constructor() {
-    this.employerRepository = new EmployerRepository();
+  constructor(
+    @inject('EmployerRepository')
+    private employerRepository: IEmployerRepository,
+    private validEmployerExistService: ValidEmployerExistService,
+    private validEmployerDataService: ValidEmployerDataService,
+  ) {
+    this.employerRepository = employerRepository;
+    this.validEmployerExistService = validEmployerExistService;
+    this.validEmployerDataService = validEmployerDataService;
   }
 
-  public async execute({ companyName, cnpj, email, password }: IEmployer): Promise<Employer> {
-    const validEmployerExistService = new ValidEmployerExistService();
-    const validEmployerDataService = new ValidEmployerDataService();
-
-    await validEmployerDataService.execute(companyName, email);
-    await validEmployerExistService.execute(cnpj, companyName);
+  public async execute({ companyName, cnpj, email, password }: IEmployer): Promise<IEmployer> {
+    await this.validEmployerDataService.execute(companyName, email);
+    await this.validEmployerExistService.execute(cnpj, companyName);
 
     return await this.employerRepository.create({
       companyName,

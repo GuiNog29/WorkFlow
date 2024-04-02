@@ -1,18 +1,22 @@
 import { hash } from 'bcryptjs';
 import { addHours, isAfter } from 'date-fns';
+import { inject, injectable } from 'tsyringe';
 import { AppError } from '@common/exceptions/AppError';
-import { CandidateRepository } from '../repositories/CandidateRepository';
-import { UserTokensRepository } from '@modules/user/repositories/UserTokensRepository';
+import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
+import { IUserTokensRepository } from '@modules/user/repositories/interface/IUserTokensRepository';
 
 interface IRequest {
   token: string;
   password: string;
 }
 
+@injectable()
 export class ResetPasswordCandidateService {
   constructor(
-    private candidateRepository: CandidateRepository,
-    private userTokenRepository: UserTokensRepository,
+    @inject('CandidateRepository')
+    private candidateRepository: ICandidateRepository,
+    @inject('UserTokensRepository')
+    private userTokenRepository: IUserTokensRepository,
   ) {
     this.candidateRepository = candidateRepository;
     this.userTokenRepository = userTokenRepository;

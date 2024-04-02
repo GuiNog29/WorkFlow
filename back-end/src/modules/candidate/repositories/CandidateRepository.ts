@@ -8,9 +8,7 @@ import { ICandidatePaginate } from '../domain/models/ICandidatePaginate';
 import { ICreateCandidate } from '../domain/models/ICreateCandidate';
 
 export class CandidateRepository implements ICandidateRepository {
-  private candidateRepository: Repository<Candidate>;
-
-  constructor() {
+  constructor(private candidateRepository: Repository<Candidate>) {
     this.candidateRepository = dataSource.getRepository(Candidate);
   }
 

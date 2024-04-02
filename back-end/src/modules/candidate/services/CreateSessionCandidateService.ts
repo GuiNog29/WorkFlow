@@ -1,6 +1,7 @@
 import authConfig from '@config/auth';
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
+import { inject, injectable } from 'tsyringe';
 import { Candidate } from '../entities/Candidate';
 import { AppError } from '@common/exceptions/AppError';
 import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
@@ -16,8 +17,12 @@ interface IResponse {
   token: string;
 }
 
+@injectable()
 export class CreateSessionCandidateService {
-  constructor(private candidateRepository: ICandidateRepository) {
+  constructor(
+    @inject('CandidateRepository')
+    private candidateRepository: ICandidateRepository,
+  ) {
     this.candidateRepository = candidateRepository;
   }
 

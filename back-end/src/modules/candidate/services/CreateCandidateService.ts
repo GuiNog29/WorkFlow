@@ -1,11 +1,14 @@
 import redisCache from '@common/cache/RedisCache';
+import { inject, injectable } from 'tsyringe';
 import { ICandidate } from '../domain/models/ICandidate';
 import { ICreateCandidate } from '../domain/models/ICreateCandidate';
 import { ValidCandidateExistService } from './ValidCandidateExistService';
 import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
 
+@injectable()
 export class CreateCandidateService {
   constructor(
+    @inject('CandidateRepository')
     private candidateRepository: ICandidateRepository,
     private validCandidateExistService: ValidCandidateExistService,
   ) {
