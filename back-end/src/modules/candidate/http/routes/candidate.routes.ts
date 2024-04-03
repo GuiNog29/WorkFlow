@@ -2,7 +2,7 @@ import multer from 'multer';
 import { Router } from 'express';
 import uploadConfig from '@config/upload';
 import CandidateController from '../controllers/CandidateController';
-import isAuthenticated from '@modules/http/middlewares/isAuthenticated';
+import isAuthenticated from '@infra/http/middlewares/isAuthenticated';
 import SessionCandidateController from '../controllers/SessionCandidateController';
 import ProfileCandidateController from '../controllers/ProfileCandidateController';
 import SendForgotPasswordCandidateController from '../controllers/SendForgotPasswordCandidateController';

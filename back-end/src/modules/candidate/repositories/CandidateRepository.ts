@@ -1,4 +1,5 @@
 import { hash } from 'bcryptjs';
+import { injectable } from 'tsyringe';
 import { dataSource } from '@infra/database';
 import { Candidate } from '../entities/Candidate';
 import { Repository, UpdateResult } from 'typeorm';
@@ -7,8 +8,11 @@ import { ICandidate } from '@modules/candidate/domain/models/ICandidate';
 import { ICandidatePaginate } from '../domain/models/ICandidatePaginate';
 import { ICreateCandidate } from '../domain/models/ICreateCandidate';
 
+@injectable()
 export class CandidateRepository implements ICandidateRepository {
-  constructor(private candidateRepository: Repository<Candidate>) {
+  private candidateRepository: Repository<Candidate>;
+
+  constructor() {
     this.candidateRepository = dataSource.getRepository(Candidate);
   }
 
@@ -30,7 +34,7 @@ export class CandidateRepository implements ICandidateRepository {
   }
 
   async updateProfilePicture(candidateId: number, fileName: string): Promise<ICandidate | null> {
-    await this.candidateRepository.update(candidateId, { profile_picture: fileName })
+    await this.candidateRepository.update(candidateId, { profile_picture: fileName });
     return this.getCandidateById(candidateId);
   }
 
@@ -74,7 +78,7 @@ export class CandidateRepository implements ICandidateRepository {
     });
   }
 
-  async save(candidate: Candidate): Promise<void>{
+  async save(candidate: Candidate): Promise<void> {
     await this.candidateRepository.save(candidate);
   }
 }
