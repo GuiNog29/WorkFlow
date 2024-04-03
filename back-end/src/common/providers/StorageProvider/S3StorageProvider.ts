@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import mime from 'mime';
+import mime from 'mime-types';
 import { S3 } from 'aws-sdk';
 import uploadConfig from '@config/upload';
 import { AppError } from '@common/exceptions/AppError';
@@ -17,7 +17,7 @@ export class S3StorageProvider {
   public async saveFile(file: string): Promise<string> {
     const originalPath = path.resolve(uploadConfig.tmpFolder, file);
 
-    const ContentType = mime.getType(originalPath);
+    const ContentType = mime.lookup(originalPath);
 
     if (!ContentType) throw new AppError('Arquivo não encontrado');
 

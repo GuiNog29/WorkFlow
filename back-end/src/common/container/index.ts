@@ -6,6 +6,6 @@ import { IUserTokensRepository } from '@modules/user/repositories/interface/IUse
 import { UserTokensRepository } from '@modules/user/repositories/UserTokensRepository';
 import { IEmployerRepository } from '@modules/employer/repositories/interface/IEmployerRepository';
 
-container.registerSingleton<ICandidateRepository>('CandidateRepository', CandidateRepository)
-container.registerSingleton<IUserTokensRepository>('UserTokensRepository', UserTokensRepository)
-container.registerSingleton<IEmployerRepository>('EmployerRepository', EmployerRepository)
+container.registerSingleton<IEmployerRepository>('EmployerRepository', EmployerRepository);
+container.registerSingleton<ICandidateRepository>('CandidateRepository', CandidateRepository);
+container.registerSingleton<IUserTokensRepository>('UserTokensRepository', UserTokensRepository);
