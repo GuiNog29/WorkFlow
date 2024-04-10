@@ -10,16 +10,18 @@ export class S3StorageProvider {
 
   constructor() {
     this.client = new S3({
-      region: 'us-east-1',
+      region: process.env.AWS_REGION || 'us-east-1',
     });
   }
 
   public async saveFile(file: string): Promise<string> {
     const originalPath = path.resolve(uploadConfig.tmpFolder, file);
 
-    const ContentType = mime.lookup(originalPath);
+    if (!fs.existsSync(originalPath)) throw new AppError('Arquivo não encontrado');
 
-    if (!ContentType) throw new AppError('Arquivo não encontrado');
+    const contentType = mime.lookup(originalPath);
+
+    if (!contentType) throw new AppError('Tipo de arquivo não suportado');
 
     const fileContent = await fs.promises.readFile(originalPath);
 
@@ -29,7 +31,7 @@ export class S3StorageProvider {
         Key: file,
         ACL: 'public-read',
         Body: fileContent,
-        ContentType,
+        ContentType: contentType,
       })
       .promise();
 
@@ -39,9 +41,11 @@ export class S3StorageProvider {
   }
 
   public async deleteFile(file: string): Promise<void> {
-    await this.client.deleteObject({
-      Bucket: uploadConfig.config.aws.bucket,
-      Key: file,
-    }).promise();
+    await this.client
+      .deleteObject({
+        Bucket: uploadConfig.config.aws.bucket,
+        Key: file,
+      })
+      .promise();
   }
 }
