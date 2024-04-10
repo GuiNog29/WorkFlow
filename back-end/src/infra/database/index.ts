@@ -10,12 +10,12 @@ import { UserToken1700323626589 } from './migrations/1700323626589-UserToken';
 
 export const dataSource = new DataSource({
   type: 'postgres',
-  host: 'localhost',
-  port: 5432,
-  username: 'postgres',
-  password: 'docker',
-  database: 'dbworkflow',
+  host: process.env.DB_HOST ||'localhost',
+  port: Number(process.env.DB_PORT) ||5432,
+  username: process.env.DB_USERNAME ||'postgres',
+  password: process.env.DB_PASSWORD ||'docker',
+  database: process.env.DB_NAME ||'dbworkflow',
   entities: [Employer, Candidate, UserToken],
   migrations: [Employer1698014743678, Candidate1698014919856, UserToken1700323626589],
-  synchronize: true,
+  synchronize: false,
 });
