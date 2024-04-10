@@ -16,17 +16,17 @@ export default function isAuthenticated(
 ): void {
   const authHeader = request.headers.authorization;
 
-  if (!authHeader) throw new AppError('Não existe Token JWT válido.');
+  if (!authHeader) throw new AppError('Token JWT não fornecido.');
 
-  const [, token] = authHeader.split(' ');
+  const [scheme, token] = authHeader.split(' ');
+
+  if (!/^Bearer$/i.test(scheme)) throw new AppError('Formato de token mal formado.');
 
   try {
-    const decodedToken = verify(token, authConfig.jwt.secret as string);
-
-    const { sub } = decodedToken as ITokenPayload;
+    const decodedToken = verify(token, authConfig.jwt.secret as string) as ITokenPayload;
 
     request.user = {
-      id: sub,
+      id: decodedToken.sub,
     };
 
     return next();
