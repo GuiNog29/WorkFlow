@@ -1,15 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 import mime from 'mime-types';
-import { S3 } from 'aws-sdk';
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import uploadConfig from '@config/upload';
 import { AppError } from '@common/exceptions/AppError';
 
 export class S3StorageProvider {
-  private client: S3;
+  private client: S3Client;
 
   constructor() {
-    this.client = new S3({
+    this.client = new S3Client({
       region: process.env.AWS_REGION || 'us-east-1',
     });
   }
@@ -25,15 +25,15 @@ export class S3StorageProvider {
 
     const fileContent = await fs.promises.readFile(originalPath);
 
-    await this.client
-      .putObject({
-        Bucket: uploadConfig.config.aws.bucket,
-        Key: file,
-        ACL: 'public-read',
-        Body: fileContent,
-        ContentType: contentType,
-      })
-      .promise();
+    const putObjectCommand = new PutObjectCommand({
+      Bucket: uploadConfig.config.aws.bucket,
+      Key: file,
+      ACL: 'public-read',
+      Body: fileContent,
+      ContentType: contentType,
+    });
+
+    await this.client.send(putObjectCommand);
 
     await fs.promises.unlink(originalPath);
 
@@ -41,11 +41,11 @@ export class S3StorageProvider {
   }
 
   public async deleteFile(file: string): Promise<void> {
-    await this.client
-      .deleteObject({
-        Bucket: uploadConfig.config.aws.bucket,
-        Key: file,
-      })
-      .promise();
+    const deleteObjectCommand = new DeleteObjectCommand({
+      Bucket: uploadConfig.config.aws.bucket,
+      Key: file,
+    });
+
+    await this.client.send(deleteObjectCommand);
   }
 }
