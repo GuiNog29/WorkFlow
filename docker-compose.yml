@@ -1,6 +1,29 @@
 version: '3'
 
 services:
+  backend:
+    build:
+      context: ./back-end
+      dockerfile: DockerFile
+    container_name: backend_container
+    env_file: .env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@dbworkflow/${POSTGRES_DB}
+      REDIS_URL: redis://redis:6379
+
+  # frontend:
+  #   build: 
+  #     context: ./front-end
+  #     dockerfile: DockerFile
+  #   container_name: frontend_container
+  #   ports:
+  #   - "8080:8080"
+
   postgres:
     image: postgres:latest
     container_name: dbworkflow

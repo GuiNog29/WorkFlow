@@ -1,7 +1,7 @@
 import { hash } from 'bcryptjs';
 import { injectable } from 'tsyringe';
 import { Employer } from '../entities/Employer';
-import { dataSource } from 'src/infra/database';
+import { dataSource } from '@infra/database';
 import { Repository, UpdateResult } from 'typeorm';
 import { IEmployer } from '@modules/employer/domain/models/IEmployer';
 import { IEmployerRepository } from './interface/IEmployerRepository';

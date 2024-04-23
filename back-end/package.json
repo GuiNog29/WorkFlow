@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "docker-compose up -d && ts-node-dev -r tsconfig-paths/register --inspect --transpile-only --ignore-watch node_modules src/server.ts",
+    "dev": "yarn build && cd ../ && docker-compose up -d && cd back-end/ && ts-node-dev -r tsconfig-paths/register --inspect --transpile-only --ignore-watch node_modules src/server.ts",
     "up": "yarn install && yarn run dist && docker-compose up -d",
     "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files",
     "lint": "eslint . --ext .ts",
@@ -45,7 +45,8 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.540.0",
+    "@aws-sdk/client-s3": "^3.556.0",
+    "@aws-sdk/lib-storage": "^3.556.0",
     "@types/redis": "^4.0.11",
     "@types/uuid": "^9.0.7",
     "aws-sdk": "^2.1591.0",
