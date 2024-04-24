@@ -7,7 +7,7 @@ import { GetCandidateByIdService } from './GetCandidateByIdService';
 import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
 
 interface IRequest {
-  userId: string;
+  userId: number;
   name: string;
   email: string;
   password?: string;

@@ -9,35 +9,40 @@ import { DeleteCandidateService } from '@modules/candidate/services/DeleteCandid
 
 export default class CandidateController {
   public async createCandidate(resquest: Request, response: Response): Promise<Response> {
-    const createCandidateService = container.resolve(CreateCandidateService);
-    return response.json(instanceToInstance(await createCandidateService.execute(resquest.body)));
+    const createCandidateService = this.getService(CreateCandidateService);
+    const candidate = await createCandidateService.execute(resquest.body);
+    return response.json(instanceToInstance(candidate));
   }
 
   public async listCandidates(request: Request, response: Response): Promise<Response> {
-    const listCandidateService = container.resolve(ListCandidateService);
-    const page = request.query.page ? Number(request.query.page) : 1;
-    const limit = request.query.limit ? Number(request.query.limit) : 15;
+    const listCandidateService = this.getService(ListCandidateService);
+    const page = Number(request.query.page) || 1;
+    const limit = Number(request.query.limit) || 15;
     const candidates = await listCandidateService.execute({ page, limit });
     return response.json(candidates);
   }
 
   public async updateCandidate(request: Request, response: Response): Promise<Response> {
-    const updateCandidateService = container.resolve(UpdateCandidateService);
+    const updateCandidateService = this.getService(UpdateCandidateService);
     const { id } = request.params;
-    return response.json(
-      instanceToInstance(await updateCandidateService.execute(Number(id), request.body)),
-    );
+    const candidate = await updateCandidateService.execute(Number(id), request.body);
+    return response.json(instanceToInstance(candidate));
   }
 
   public async getCandidateById(request: Request, response: Response): Promise<Response> {
-    const getCandidateByIdService = container.resolve(GetCandidateByIdService);
+    const getCandidateByIdService = this.getService(GetCandidateByIdService);
     const { id } = request.params;
-    return response.json(instanceToInstance(await getCandidateByIdService.execute(Number(id))));
+    const candidate = await getCandidateByIdService.execute(Number(id));
+    return response.json(instanceToInstance(candidate));
   }
 
   public async deleteCandidate(request: Request, response: Response): Promise<Response> {
-    const deleteCandidateService = container.resolve(DeleteCandidateService);
+    const deleteCandidateService = this.getService(DeleteCandidateService);
     const { id } = request.params;
     return response.json(await deleteCandidateService.execute(Number(id)));
+  }
+
+  private getService<T>(service: new (...args: any[]) => T): T {
+    return container.resolve(service);
   }
 }
