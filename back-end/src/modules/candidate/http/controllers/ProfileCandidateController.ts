@@ -6,14 +6,21 @@ import UpdateProfileCandidateService from '@modules/candidate/services/UpdatePro
 
 export default class ProfileCandidateController {
   public async show(request: Request, response: Response): Promise<Response> {
-    const getCandidateByIdService = container.resolve(GetCandidateByIdService);
-    const userId = Number(request.user.id);
-    return response.json(instanceToInstance(await getCandidateByIdService.execute(userId)));
+    const getCandidateByIdService = this.getService(GetCandidateByIdService);
+    const userId = this.convertToNumber(request.user.id);
+
+    if (!userId) return response.status(400).json({ message: 'Invalid user ID' });
+
+    const user = await getCandidateByIdService.execute(userId);
+    return response.json(instanceToInstance(user));
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
-    const updateProfileCandidateService = container.resolve(UpdateProfileCandidateService);
-    const userId = request.user.id;
+    const updateProfileCandidateService = this.getService(UpdateProfileCandidateService);
+    const userId = this.convertToNumber(request.user.id);
+
+    if (!userId) return response.status(400).json({ message: 'Invalid user ID' });
+
     const { name, email, password, oldPassword } = request.body;
 
     const user = await updateProfileCandidateService.execute({
@@ -25,5 +32,14 @@ export default class ProfileCandidateController {
     });
 
     return response.json(instanceToInstance(user));
+  }
+
+  private getService<T>(service: new (...args: any[]) => T): T {
+    return container.resolve(service);
+  }
+
+  private convertToNumber(id: any): number | null {
+    const converted = Number(id);
+    return isNaN(converted) ? null : converted;
   }
 }

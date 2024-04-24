@@ -11,13 +11,14 @@ import { ICandidate } from '../domain/models/ICandidate';
 @Entity('candidates')
 export class Candidate implements ICandidate {
   @PrimaryGeneratedColumn()
-  id: number;
+  readonly id: number;
 
   @Column()
   name: string;
 
   @Column()
-  cpf: string;
+  @Exclude()
+  readonly cpf: string;
 
   @Column()
   email: string;
@@ -30,15 +31,14 @@ export class Candidate implements ICandidate {
   profile_picture: string;
 
   @CreateDateColumn()
-  created_at: Date;
+  readonly created_at: Date;
 
   @UpdateDateColumn()
-  updated_at: Date;
+  readonly updated_at: Date;
 
   @Expose({ name: 'profile_picture_url' })
   getProfilePictureUrl(): string | null {
     if (!this.profile_picture) return null;
-
     return `${process.env.APP_API_URL}/files/${this.profile_picture}`;
   }
 }

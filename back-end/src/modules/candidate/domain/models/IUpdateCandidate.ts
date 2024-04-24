@@ -1,6 +1,6 @@
 export interface IUpdateCandidate {
   name: string;
-  cpf: string;
+  readonly cpf: string;
   email: string;
   password: string;
 }
