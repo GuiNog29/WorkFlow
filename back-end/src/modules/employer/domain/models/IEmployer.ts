@@ -1,11 +1,11 @@
 export interface IEmployer {
-  id: number;
+  readonly id: number;
   companyName: string;
-  cnpj: string;
+  readonly cnpj: string;
   email: string;
   password: string;
-  profile_picture: string;
-  created_at: Date;
-  updated_at: Date;
+  profile_picture?: string;
+  readonly created_at: Date;
+  readonly updated_at: Date;
   getProfilePictureUrl(): string | null;
 }

@@ -4,9 +4,10 @@ import { inject, injectable } from 'tsyringe';
 import { Employer } from '../entities/Employer';
 import { GetEmployerByIdService } from './GetEmployerByIdService';
 import { IEmployerRepository } from '../repositories/interface/IEmployerRepository';
+import { IEmployer } from '../domain/models/IEmployer';
 
 interface IRequest {
-  userId: string;
+  userId: number;
   companyName: string;
   email: string;
   password?: string;
@@ -30,7 +31,7 @@ export default class UpdateProfileCandidateService {
     email,
     password,
     oldPassword,
-  }: IRequest): Promise<Employer | null> {
+  }: IRequest): Promise<IEmployer | null> {
     const employer = await this.getEmployerByIdService.execute(Number(userId));
 
     if (!employer) throw new AppError('Usuário não encontrado.');

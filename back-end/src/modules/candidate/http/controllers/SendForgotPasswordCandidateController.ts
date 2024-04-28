@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
+import { plainToInstance } from 'class-transformer';
+import { UserType } from '@modules/user/entities/UserType';
 import { IsEmail, validateOrReject } from 'class-validator';
 import { SendForgotPasswordEmailCandidateService } from '@modules/candidate/services/SendForgotPasswordEmailCandidateService';
-import { UserType } from '@modules/user/entities/UserType';
-import { plainToInstance } from 'class-transformer';
 
 class ForgotPassworRequest {
   @IsEmail()

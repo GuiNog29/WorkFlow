@@ -36,7 +36,7 @@ candidateRoutes.post('/createSession', sessionCandidateController.create);
 
 // Profile routes
 candidateRoutes.get('/profile', isAuthenticated, profileCandidateController.show);
-candidateRoutes.put('/Profile', isAuthenticated, profileCandidateController.update);
+candidateRoutes.put('/profile', isAuthenticated, profileCandidateController.update);
 
 // Password routes
 candidateRoutes.post('/forgotPassword', sendForgotPasswordCandidateController.create);
