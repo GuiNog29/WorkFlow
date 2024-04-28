@@ -1,7 +1,7 @@
 export interface IUserToken {
   token: string;
-  userId: number;
-  created_at: Date;
-  updated_at: Date;
+  readonly userId: number;
+  readonly created_at: Date;
+  readonly updated_at: Date;
   userType: number;
 }

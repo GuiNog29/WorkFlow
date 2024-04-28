@@ -9,15 +9,12 @@ export class DeleteEmployerService {
     @inject('EmployerRepository')
     private employerRepository: IEmployerRepository,
     private getEmployerByIdService: GetEmployerByIdService,
-  ) {
-    this.employerRepository = employerRepository;
-    this.getEmployerByIdService = getEmployerByIdService;
-  }
+  ) {}
 
   public async execute(employerId: number): Promise<Boolean> {
     const employer = await this.getEmployerByIdService.execute(employerId);
 
-    if (!employer) throw new AppError('Usuário não encontrado.');
+    if (!employer) throw new AppError('Usuário não encontrado.', 401);
 
     return await this.employerRepository.delete(employerId);
   }

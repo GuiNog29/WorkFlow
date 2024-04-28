@@ -35,7 +35,6 @@ export class ResetPasswordCandidateService {
     candidate.password = await hash(password, 8);
 
     await this.candidateRepository.save(candidate);
-
     await this.userTokenRepository.invalidateToken(token);
   }
 }

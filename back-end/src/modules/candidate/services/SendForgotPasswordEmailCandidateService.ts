@@ -4,6 +4,7 @@ import mailConfig from '@config/mail/mail';
 import { inject, injectable } from 'tsyringe';
 import EtheralMail from '@config/mail/EtherealMail';
 import { AppError } from '@common/exceptions/AppError';
+import { SendPasswordResetEmail } from '@modules/user/utils/SendPasswordResetEmail';
 import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
 import { IUserTokensRepository } from '@modules/user/repositories/interface/IUserTokensRepository';
 
@@ -30,39 +31,6 @@ export class SendForgotPasswordEmailCandidateService {
 
     const mailService = mailConfig.driver === 'ses' ? SESMail : EtheralMail;
 
-    await this.sendPasswordResetEmail(mailService, candidate.name, candidate.email, token);
-  }
-
-  private async sendPasswordResetEmail(
-    mailService: typeof SESMail | typeof EtheralMail,
-    name: string,
-    email: string,
-    token: string,
-  ) {
-    const forgotPasswordTemplate = path.resolve(
-      __dirname,
-      '..',
-      '..',
-      'user',
-      'views',
-      'forgot_password.hbs',
-    );
-
-    if (mailConfig.driver === 'ses') {
-      await mailService.sendMail({
-        to: {
-          name,
-          email,
-        },
-        subject: 'WorkFlow - Recuperação de Senha',
-        templateData: {
-          file: forgotPasswordTemplate,
-          variables: {
-            name: name,
-            link: `${process.env.APP_WEB_URL}/resetPassword?token=${token}`,
-          },
-        },
-      });
-    }
+    await SendPasswordResetEmail(mailService, candidate.name, candidate.email, token);
   }
 }

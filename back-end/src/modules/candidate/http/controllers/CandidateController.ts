@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
 import { container } from 'tsyringe';
+import { Request, Response } from 'express';
 import { instanceToInstance } from 'class-transformer';
 import { GetService } from '@modules/user/utils/ServiceResolver';
 import { ListCandidateService } from '@modules/candidate/services/ListCandidateService';

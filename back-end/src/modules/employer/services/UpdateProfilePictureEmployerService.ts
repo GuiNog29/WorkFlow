@@ -1,10 +1,9 @@
-import { Employer } from '../entities/Employer';
-import { AppError } from '@common/exceptions/AppError';
-import { GetEmployerByIdService } from './GetEmployerByIdService';
-import { EmployerRepository } from '../repositories/EmployerRepository';
-import { DiskStorageProvider } from '@common/providers/StorageProvider/DiskStorageProvider';
 import upload from '@config/upload';
 import { inject, injectable } from 'tsyringe';
+import { AppError } from '@common/exceptions/AppError';
+import { IEmployer } from '../domain/models/IEmployer';
+import { GetEmployerByIdService } from './GetEmployerByIdService';
+import { DiskStorageProvider } from '@common/providers/StorageProvider/DiskStorageProvider';
 import { S3StorageProvider } from '@common/providers/StorageProvider/S3StorageProvider';
 import { IEmployerRepository } from '../repositories/interface/IEmployerRepository';
 
@@ -19,14 +18,11 @@ export class UpdateProfilePictureEmployerService {
     @inject('EmployerRepository')
     private employerRepository: IEmployerRepository,
     private getEmployerByIdService: GetEmployerByIdService,
-  ) {
-    this.employerRepository = employerRepository;
-    this.getEmployerByIdService = getEmployerByIdService;
-  }
+  ) {}
 
-  async execute({ employerId, fileName }: IRequest): Promise<Employer | null> {
-    const employer = await this.getEmployerByIdService.execute(Number(employerId));
+  async execute({ employerId, fileName }: IRequest): Promise<IEmployer | null> {
     let profilePicFileName = '';
+    const employer = await this.getEmployerByIdService.execute(Number(employerId));
 
     if (!employer) throw new AppError('Usuário não encontrado.');
 

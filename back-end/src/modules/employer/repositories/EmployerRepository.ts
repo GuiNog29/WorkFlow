@@ -1,11 +1,12 @@
 import { hash } from 'bcryptjs';
 import { injectable } from 'tsyringe';
-import { Employer } from '../entities/Employer';
 import { dataSource } from '@infra/database';
+import { Employer } from '../entities/Employer';
 import { Repository, UpdateResult } from 'typeorm';
+import { ICreateEmployer } from '../domain/models/ICreateEmployer';
+import { IUpdateEmployer } from '../domain/models/IUpdateEmployer';
 import { IEmployer } from '@modules/employer/domain/models/IEmployer';
 import { IEmployerRepository } from './interface/IEmployerRepository';
-import { ICreateEmployer } from '../domain/models/ICreateEmployer';
 
 @injectable()
 export class EmployerRepository implements IEmployerRepository {
@@ -17,7 +18,6 @@ export class EmployerRepository implements IEmployerRepository {
 
   async create({ companyName, cnpj, email, password }: ICreateEmployer): Promise<IEmployer> {
     const hashedPassword = await hash(password, 8);
-
     const newEmployer = this.employerRepository.create({
       companyName,
       cnpj,
@@ -29,7 +29,7 @@ export class EmployerRepository implements IEmployerRepository {
     return newEmployer;
   }
 
-  async update(employerId: number, { companyName, email }: IEmployer): Promise<UpdateResult> {
+  async update(employerId: number, { companyName, email }: IUpdateEmployer): Promise<UpdateResult> {
     return await this.employerRepository.update(employerId, {
       companyName,
       email,

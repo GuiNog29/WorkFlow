@@ -79,7 +79,7 @@ export class CandidateRepository implements ICandidateRepository {
     });
   }
 
-  async save(candidate: Candidate): Promise<void> {
+  async save(candidate: ICandidate): Promise<void> {
     await this.candidateRepository.save(candidate);
   }
 }

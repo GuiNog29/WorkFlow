@@ -1,7 +1,6 @@
 import { compare, hash } from 'bcryptjs';
 import { AppError } from '@common/exceptions/AppError';
 import { inject, injectable } from 'tsyringe';
-import { Employer } from '../entities/Employer';
 import { GetEmployerByIdService } from './GetEmployerByIdService';
 import { IEmployerRepository } from '../repositories/interface/IEmployerRepository';
 import { IEmployer } from '../domain/models/IEmployer';
@@ -20,10 +19,7 @@ export default class UpdateProfileCandidateService {
     @inject('EmployerRepository')
     private employerRepository: IEmployerRepository,
     private getEmployerByIdService: GetEmployerByIdService,
-  ) {
-    this.employerRepository = employerRepository;
-    this.getEmployerByIdService = getEmployerByIdService;
-  }
+  ) {}
 
   public async execute({
     userId,
@@ -36,19 +32,16 @@ export default class UpdateProfileCandidateService {
 
     if (!employer) throw new AppError('Usuário não encontrado.');
 
-    const employerEmail = await this.employerRepository.findEmployerByEmail(email);
+    if (email !== employer.email && (await this.employerRepository.findEmployerByEmail(email)))
+    throw new AppError('Este e-mail já foi cadastrado.');
 
-    if (employerEmail && employerEmail.id !== Number(userId))
-      throw new AppError('Este e-mail já foi cadastrado.');
+    if (password) {
+      if (!oldPassword) throw new AppError('Senha antiga deve ser preenchida.');
 
-    if (password && !oldPassword) throw new AppError('Senha antiga deve ser preenchida.');
+      if (!(await compare(oldPassword, employer.password)))
+        throw new AppError('Senha antiga não confere.');
 
-    if (password && oldPassword) {
-      const verifyOldPassword = await compare(oldPassword, employer.password);
-
-      if (!verifyOldPassword) throw new AppError('Senha antiga não confere.');
-
-      employer.password = await hash(password, 8);
+        employer.password = await hash(password, 8);
     }
 
     employer.companyName = companyName;

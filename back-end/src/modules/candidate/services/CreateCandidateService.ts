@@ -1,5 +1,5 @@
-import redisCache from '@common/cache/RedisCache';
 import { inject, injectable } from 'tsyringe';
+import redisCache from '@common/cache/RedisCache';
 import { ICandidate } from '../domain/models/ICandidate';
 import { ICreateCandidate } from '../domain/models/ICreateCandidate';
 import { ValidCandidateExistService } from './ValidCandidateExistService';

@@ -17,13 +17,13 @@ export class UserToken implements IUserToken {
   token: string;
 
   @Column()
-  userId: number;
+  readonly userId: number;
 
   @CreateDateColumn()
-  created_at: Date;
+  readonly created_at: Date;
 
   @UpdateDateColumn()
-  updated_at: Date;
+  readonly updated_at: Date;
 
   @Column()
   userType: number;

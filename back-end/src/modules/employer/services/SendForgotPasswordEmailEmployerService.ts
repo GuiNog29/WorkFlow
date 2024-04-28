@@ -6,6 +6,7 @@ import EtheralMail from '@config/mail/EtherealMail';
 import { AppError } from '@common/exceptions/AppError';
 import { UserTokensRepository } from '@modules/user/repositories/UserTokensRepository';
 import { IEmployerRepository } from '../repositories/interface/IEmployerRepository';
+import { SendPasswordResetEmail } from '@modules/user/utils/SendPasswordResetEmail';
 
 interface IRequest {
   email: string;
@@ -17,11 +18,9 @@ export class SendForgotPasswordEmailEmployerService {
   constructor(
     @inject('EmployerRepository')
     private employerRepository: IEmployerRepository,
+    @inject('UserTokensRepository')
     private userTokenRepository: UserTokensRepository,
-  ) {
-    this.employerRepository = employerRepository;
-    this.userTokenRepository = userTokenRepository;
-  }
+  ) {}
 
   public async execute({ userType, email }: IRequest): Promise<void> {
     const employer = await this.employerRepository.findEmployerByEmail(email);
@@ -30,46 +29,8 @@ export class SendForgotPasswordEmailEmployerService {
 
     const { token } = await this.userTokenRepository.generateToken(userType, employer.id);
 
-    const forgotPasswordTemplate = path.resolve(
-      __dirname,
-      '..',
-      '..',
-      'user',
-      'views',
-      'forgot_passwor.hbs',
-    );
+    const mailService = mailConfig.driver === 'ses' ? SESMail : EtheralMail;
 
-    if (mailConfig.driver === 'ses') {
-      await SESMail.sendMail({
-        to: {
-          name: employer.companyName,
-          email: employer.email,
-        },
-        subject: 'WorkFlow - Recuperação de Senha',
-        templateData: {
-          file: forgotPasswordTemplate,
-          variables: {
-            name: employer.companyName,
-            link: `${process.env.APP_WEB_URL}/resetPassword?token=${token}`,
-          },
-        },
-      });
-      return;
-    }
-
-    await EtheralMail.sendMail({
-      to: {
-        name: employer.companyName,
-        email: employer.email,
-      },
-      subject: 'WorkFlow - Recuperação de Senha',
-      templateData: {
-        file: forgotPasswordTemplate,
-        variables: {
-          name: employer.companyName,
-          link: `${process.env.APP_WEB_URL}/resetPassword?token=${token}`,
-        },
-      },
-    });
+    await SendPasswordResetEmail(mailService, employer.companyName, employer.email, token);
   }
 }
