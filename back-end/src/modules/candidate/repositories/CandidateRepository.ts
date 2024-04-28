@@ -7,6 +7,7 @@ import { ICandidateRepository, SearchParams } from './interface/ICandidateReposi
 import { ICandidate } from '@modules/candidate/domain/models/ICandidate';
 import { ICandidatePaginate } from '../domain/models/ICandidatePaginate';
 import { ICreateCandidate } from '../domain/models/ICreateCandidate';
+import { IUpdateCandidate } from '../domain/models/IUpdateCandidate';
 
 @injectable()
 export class CandidateRepository implements ICandidateRepository {
@@ -29,8 +30,8 @@ export class CandidateRepository implements ICandidateRepository {
     return newCandidate;
   }
 
-  async update(candidateId: number, { name, email, password }: ICandidate): Promise<UpdateResult> {
-    return await this.candidateRepository.update(candidateId, { name, email, password });
+  async update(candidateId: number, { name, email }: IUpdateCandidate): Promise<UpdateResult> {
+    return await this.candidateRepository.update(candidateId, { name, email });
   }
 
   async updateProfilePicture(candidateId: number, fileName: string): Promise<ICandidate | null> {

@@ -18,4 +18,9 @@ export class UserTokensRepository implements IUserTokensRepository {
     await this.userTokenRepository.save(userToken);
     return userToken;
   }
+
+  async invalidateToken(token: string): Promise<void> {
+    const userToken = await this.userTokenRepository.findOne({ where: { token } });
+    if (userToken) await this.userTokenRepository.remove(userToken);
+  }
 }

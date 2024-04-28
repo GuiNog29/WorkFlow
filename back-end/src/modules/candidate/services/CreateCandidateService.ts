@@ -11,14 +11,12 @@ export class CreateCandidateService {
     @inject('CandidateRepository')
     private candidateRepository: ICandidateRepository,
     private validCandidateExistService: ValidCandidateExistService,
-  ) {
-    this.candidateRepository = candidateRepository;
-    this.validCandidateExistService = validCandidateExistService;
-  }
+  ) {}
 
-  public async execute({ name, cpf, email, password }: ICreateCandidate): Promise<ICandidate> {
+  public async execute(candidateData: ICreateCandidate): Promise<ICandidate> {
+    const { cpf, email } = candidateData;
     await this.validCandidateExistService.execute(cpf, email);
     await redisCache.invalidate('workflow-CANDIDATES_LIST');
-    return await this.candidateRepository.create({ name, cpf, email, password });
+    return this.candidateRepository.create(candidateData);
   }
 }

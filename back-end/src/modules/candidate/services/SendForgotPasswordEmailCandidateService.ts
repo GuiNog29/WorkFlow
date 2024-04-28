@@ -19,10 +19,7 @@ export class SendForgotPasswordEmailCandidateService {
     private candidateRepository: ICandidateRepository,
     @inject('UserTokensRepository')
     private userTokenRepository: IUserTokensRepository,
-  ) {
-    this.candidateRepository = candidateRepository;
-    this.userTokenRepository = userTokenRepository;
-  }
+  ) {}
 
   public async execute({ userType, email }: IRequest): Promise<void> {
     const candidate = await this.candidateRepository.findCandidateByEmail(email);
@@ -31,6 +28,17 @@ export class SendForgotPasswordEmailCandidateService {
 
     const { token } = await this.userTokenRepository.generateToken(userType, candidate.id);
 
+    const mailService = mailConfig.driver === 'ses' ? SESMail : EtheralMail;
+
+    await this.sendPasswordResetEmail(mailService, candidate.name, candidate.email, token);
+  }
+
+  private async sendPasswordResetEmail(
+    mailService: typeof SESMail | typeof EtheralMail,
+    name: string,
+    email: string,
+    token: string,
+  ) {
     const forgotPasswordTemplate = path.resolve(
       __dirname,
       '..',
@@ -41,36 +49,20 @@ export class SendForgotPasswordEmailCandidateService {
     );
 
     if (mailConfig.driver === 'ses') {
-      await SESMail.sendMail({
+      await mailService.sendMail({
         to: {
-          name: candidate.name,
-          email: candidate.email,
+          name,
+          email,
         },
         subject: 'WorkFlow - Recuperação de Senha',
         templateData: {
           file: forgotPasswordTemplate,
           variables: {
-            name: candidate.name,
+            name: name,
             link: `${process.env.APP_WEB_URL}/resetPassword?token=${token}`,
           },
         },
       });
-      return;
     }
-
-    await EtheralMail.sendMail({
-      to: {
-        name: candidate.name,
-        email: candidate.email,
-      },
-      subject: 'WorkFlow - Recuperação de Senha',
-      templateData: {
-        file: forgotPasswordTemplate,
-        variables: {
-          name: candidate.name,
-          link: `${process.env.APP_WEB_URL}/resetPassword?token=${token}`,
-        },
-      },
-    });
   }
 }

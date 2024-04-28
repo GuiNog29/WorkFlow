@@ -2,8 +2,8 @@ import authConfig from '@config/auth';
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import { inject, injectable } from 'tsyringe';
-import { Candidate } from '../entities/Candidate';
 import { AppError } from '@common/exceptions/AppError';
+import { ICandidate } from '../domain/models/ICandidate';
 import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
 
 interface IRequest {
@@ -13,7 +13,7 @@ interface IRequest {
 }
 
 interface IResponse {
-  candidate: Candidate;
+  candidate: ICandidate;
   token: string;
 }
 
@@ -22,18 +22,16 @@ export class CreateSessionCandidateService {
   constructor(
     @inject('CandidateRepository')
     private candidateRepository: ICandidateRepository,
-  ) {
-    this.candidateRepository = candidateRepository;
-  }
+  ) {}
 
   public async execute({ cpf, email, password }: IRequest): Promise<IResponse> {
     const candidate = await this.candidateRepository.findCandidate(cpf, email);
 
-    if (!candidate) throw new AppError('CNPJ/Email ou senha estão incorretos.', 401);
+    if (!candidate) throw new AppError('As credenciais fornecidas estão incorretas.', 401);
 
     const passwordConfirmed = await compare(password, candidate.password);
 
-    if (!passwordConfirmed) throw new AppError('CNPJ/Email ou senha estão incorretos.', 401);
+    if (!passwordConfirmed) throw new AppError('As credenciais fornecidas estão incorretas.', 401);
 
     const token = sign({}, authConfig.jwt.secret as string, {
       subject: String(candidate.id),

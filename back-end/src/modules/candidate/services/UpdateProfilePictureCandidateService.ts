@@ -7,6 +7,7 @@ import { GetCandidateByIdService } from './GetCandidateByIdService';
 import { DiskStorageProvider } from '@common/providers/StorageProvider/DiskStorageProvider';
 import { S3StorageProvider } from '@common/providers/StorageProvider/S3StorageProvider';
 import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
+import { ICandidate } from '../domain/models/ICandidate';
 
 interface IRequest {
   candidateId: string;
@@ -19,14 +20,12 @@ export class UpdateProfilePictureCandidateService {
     @inject('CandidateRepository')
     private candidateRepository: ICandidateRepository,
     private getCandidateByIdService: GetCandidateByIdService,
-  ) {
-    this.candidateRepository = candidateRepository;
-    this.getCandidateByIdService = getCandidateByIdService;
-  }
+  ) {}
 
-  async execute({ candidateId, fileName }: IRequest): Promise<Candidate | null> {
+  async execute({ candidateId, fileName }: IRequest): Promise<ICandidate | null> {
     let profilePicFileName = '';
     const candidate = await this.getCandidateByIdService.execute(Number(candidateId));
+
     if (!candidate) throw new AppError('Usuário não encontrado.');
 
     if (upload.driver === 's3') {

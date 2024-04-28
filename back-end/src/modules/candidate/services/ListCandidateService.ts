@@ -13,24 +13,17 @@ export class ListCandidateService {
   constructor(
     @inject('CandidateRepository')
     private candidateRepository: ICandidateRepository,
-  ) {
-    this.candidateRepository = candidateRepository;
-  }
+  ) {}
 
   public async execute({ page, limit }: SearchParams): Promise<ICandidatePaginate | null> {
-    const take = limit;
-    const skip = (Number(page) - 1) * take;
+    const cacheKey = `workflow-CANDIDATES_LIST_${page}_${limit}`;
 
-    let candidates: ICandidatePaginate | null = await redisCache.recover<ICandidatePaginate>(
-      'workflow-CANDIDATES_LIST',
-    );
+    let candidates = await redisCache.recover<ICandidatePaginate>(cacheKey);
 
     if (!candidates) {
-      const candidatesData = await this.candidateRepository.findAll({ page, skip, take });
-      if (candidatesData) {
-        candidates = candidatesData;
-        await redisCache.save('workflow-CANDIDATES_LIST', candidatesData);
-      }
+      const skip = (page - 1) * limit;
+      candidates = await this.candidateRepository.findAll({ page, skip, take: limit });
+      await redisCache.save(cacheKey, candidates);
     }
 
     return candidates;
