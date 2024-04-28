@@ -8,6 +8,7 @@ import { DiskStorageProvider } from '@common/providers/StorageProvider/DiskStora
 import { S3StorageProvider } from '@common/providers/StorageProvider/S3StorageProvider';
 import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
 import { ICandidate } from '../domain/models/ICandidate';
+import { IStorageProvider } from '@common/providers/StorageProvider/interface/IStorageProvider';
 
 interface IRequest {
   candidateId: string;
@@ -20,27 +21,18 @@ export class UpdateProfilePictureCandidateService {
     @inject('CandidateRepository')
     private candidateRepository: ICandidateRepository,
     private getCandidateByIdService: GetCandidateByIdService,
+    @inject('StorageProvider')
+    private storageProvider: IStorageProvider,
   ) {}
 
   async execute({ candidateId, fileName }: IRequest): Promise<ICandidate | null> {
-    let profilePicFileName = '';
     const candidate = await this.getCandidateByIdService.execute(Number(candidateId));
 
     if (!candidate) throw new AppError('Usuário não encontrado.');
 
-    if (upload.driver === 's3') {
-      const s3Provider = new S3StorageProvider();
+    if (candidate.profile_picture) await this.storageProvider.deleteFile(candidate.profile_picture);
 
-      if (candidate.profile_picture) await s3Provider.deleteFile(candidate.profile_picture);
-
-      let profilePicFileName = await s3Provider.saveFile(fileName);
-    } else {
-      const diskProvider = new DiskStorageProvider();
-
-      if (candidate.profile_picture) await diskProvider.deleteFile(candidate.profile_picture);
-
-      let profilePicFileName = await diskProvider.saveFile(fileName);
-    }
+    const profilePicFileName = await this.storageProvider.saveFile(fileName);
 
     await redisCache.invalidate('workflow-CANDIDATES_LIST');
 
