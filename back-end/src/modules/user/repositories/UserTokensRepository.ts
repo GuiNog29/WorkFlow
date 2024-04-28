@@ -5,22 +5,23 @@ import { IUserTokensRepository } from './interface/IUserTokensRepository';
 import { IUserToken } from '../domain/models/IUserToken';
 
 export class UserTokensRepository implements IUserTokensRepository {
-  constructor(private userTokenRepository: Repository<UserToken>) {
-    this.userTokenRepository = dataSource.getRepository(UserToken);
+  private ormRepository: Repository<UserToken>;
+
+  constructor() {
+    this.ormRepository = dataSource.getRepository(UserToken);
   }
 
   async findByToken(token: string): Promise<IUserToken | null> {
-    return await this.userTokenRepository.findOneBy({ token });
+    return this.ormRepository.findOneBy({ token });
   }
 
   async generateToken(userType: number, userId: number): Promise<IUserToken> {
-    const userToken = this.userTokenRepository.create({ userId, userType });
-    await this.userTokenRepository.save(userToken);
+    const userToken = this.ormRepository.create({ userId, userType });
+    await this.ormRepository.save(userToken);
     return userToken;
   }
 
   async invalidateToken(token: string): Promise<void> {
-    const userToken = await this.userTokenRepository.findOne({ where: { token } });
-    if (userToken) await this.userTokenRepository.remove(userToken);
+    await this.ormRepository.delete({ token });
   }
 }
