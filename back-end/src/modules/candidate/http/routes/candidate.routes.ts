@@ -10,30 +10,35 @@ import UpdateProfilePictureCandidateController from '../controllers/UpdateProfil
 
 const candidateRoutes = Router();
 const upload = multer(uploadConfig.multer);
+
+// Controllers
 const candidateController = new CandidateController();
 const sessionCandidateController = new SessionCandidateController();
 const profileCandidateController = new ProfileCandidateController();
 const sendForgotPasswordCandidateController = new SendForgotPasswordCandidateController();
 const updateProfilePictureController = new UpdateProfilePictureCandidateController();
 
-candidateRoutes.post('/create', candidateController.createCandidate);
-candidateRoutes.get('/listCandidates', isAuthenticated, candidateController.listCandidates);
-candidateRoutes.put('/update/:id', isAuthenticated, candidateController.updateCandidate);
-candidateRoutes.get('/get/:id', isAuthenticated, candidateController.getCandidateById);
-candidateRoutes.delete(
-  '/delete/:id',
-  isAuthenticated,
-  candidateController.deleteCandidate,
-);
+// Candidate routes
+candidateRoutes.post('/', candidateController.createCandidate);
+candidateRoutes.get('/', isAuthenticated, candidateController.listCandidates);
+candidateRoutes.get('/:id', isAuthenticated, candidateController.getCandidateById);
+candidateRoutes.put('/:id', isAuthenticated, candidateController.updateCandidate);
+candidateRoutes.delete('/:id', isAuthenticated, candidateController.deleteCandidate);
 candidateRoutes.patch(
-  '/profilePicture',
+  '/:id/profile-picture',
   isAuthenticated,
   upload.single('profilePicture'),
   updateProfilePictureController.update,
 );
+
+// Session routes
 candidateRoutes.post('/createSession', sessionCandidateController.create);
-candidateRoutes.post('/forgotPassword', sendForgotPasswordCandidateController.create);
+
+// Profile routes
 candidateRoutes.get('/profile', isAuthenticated, profileCandidateController.show);
-candidateRoutes.put('/updateProfile', isAuthenticated, profileCandidateController.update);
+candidateRoutes.put('/profile', isAuthenticated, profileCandidateController.update);
+
+// Password routes
+candidateRoutes.post('/forgotPassword', sendForgotPasswordCandidateController.create);
 
 export default candidateRoutes;

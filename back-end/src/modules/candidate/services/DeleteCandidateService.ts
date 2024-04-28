@@ -10,18 +10,15 @@ export class DeleteCandidateService {
     @inject('CandidateRepository')
     private candidateRepository: ICandidateRepository,
     private getCandidateByIdService: GetCandidateByIdService,
-  ) {
-    this.candidateRepository = candidateRepository;
-    this.getCandidateByIdService = getCandidateByIdService;
-  }
+  ) {}
 
-  async execute(candidateId: number): Promise<Boolean> {
+  async execute(candidateId: number): Promise<void> {
     const candidate = await this.getCandidateByIdService.execute(candidateId);
 
-    if (!candidate) throw new AppError('Usuário não encontrado.');
+    if (!candidate) throw new AppError('Usuário não encontrado.', 404);
+
+    await this.candidateRepository.delete(candidateId);
 
     await redisCache.invalidate('workflow-CANDIDATES_LIST');
-
-    return await this.candidateRepository.delete(candidateId);
   }
 }

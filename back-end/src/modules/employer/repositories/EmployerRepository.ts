@@ -1,70 +1,65 @@
 import { hash } from 'bcryptjs';
 import { injectable } from 'tsyringe';
-import { Employer } from '../entities/Employer';
 import { dataSource } from '@infra/database';
+import { Employer } from '../entities/Employer';
 import { Repository, UpdateResult } from 'typeorm';
+import { ICreateEmployer } from '../domain/models/ICreateEmployer';
+import { IUpdateEmployer } from '../domain/models/IUpdateEmployer';
 import { IEmployer } from '@modules/employer/domain/models/IEmployer';
 import { IEmployerRepository } from './interface/IEmployerRepository';
-import { ICreateEmployer } from '../domain/models/ICreateEmployer';
 
 @injectable()
 export class EmployerRepository implements IEmployerRepository {
-  private employerRepository: Repository<Employer>;
+  private ormRepository: Repository<Employer>;
 
   constructor() {
-    this.employerRepository = dataSource.getRepository(Employer);
+    this.ormRepository = dataSource.getRepository(Employer);
   }
 
-  async create({ companyName, cnpj, email, password }: ICreateEmployer): Promise<IEmployer> {
-    const hashedPassword = await hash(password, 8);
-
-    const newEmployer = this.employerRepository.create({
-      companyName,
-      cnpj,
-      email,
+  async create(employerData: ICreateEmployer): Promise<IEmployer> {
+    const hashedPassword = await hash(employerData.password, 8);
+    const newEmployer = this.ormRepository.create({
+      ...employerData,
       password: hashedPassword,
     });
 
-    await this.employerRepository.save(newEmployer);
+    await this.ormRepository.save(newEmployer);
     return newEmployer;
   }
 
-  async update(employerId: number, { companyName, email }: IEmployer): Promise<UpdateResult> {
-    return await this.employerRepository.update(employerId, {
-      companyName,
-      email,
-    });
+  async update(employerId: number, employerData: IUpdateEmployer): Promise<UpdateResult> {
+    return this.ormRepository.update(employerId, employerData);
   }
 
   async updateProfilePicture(employerId: number, fileName: string): Promise<IEmployer | null> {
-    await this.employerRepository.update(employerId, { profile_picture: fileName });
+    await this.ormRepository.update(employerId, { profile_picture: fileName });
     return this.getEmployerById(employerId);
   }
 
   async getEmployerById(employerId: number): Promise<IEmployer | null> {
-    return await this.employerRepository.findOneBy({ id: employerId });
+    return await this.ormRepository.findOneBy({ id: employerId });
   }
 
   async delete(employerId: number): Promise<Boolean> {
-    const deleteResult = await this.employerRepository.delete(employerId);
+    const deleteResult = await this.ormRepository.delete(employerId);
     return deleteResult.affected === 1;
   }
 
   async findEmployerByCnpj(cnpj: string): Promise<IEmployer | null> {
-    return await this.employerRepository.findOneBy({ cnpj });
+    return await this.ormRepository.findOneBy({ cnpj });
   }
 
   async findEmployerByEmail(email: string): Promise<IEmployer | null> {
-    return await this.employerRepository.findOneBy({ email });
+    return await this.ormRepository.findOneBy({ email });
   }
 
   findEmployer(cnpj: string, email: string): Promise<IEmployer | null> {
-    return this.employerRepository.findOne({
+    return this.ormRepository.findOne({
       where: [{ cnpj: cnpj }, { email: email }],
     });
   }
 
   async save(employer: IEmployer): Promise<void> {
-    await this.employerRepository.save(employer);
+    await this.ormRepository.save(employer);
   }
 }

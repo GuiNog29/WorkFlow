@@ -7,17 +7,13 @@ export class ValidEmployerExistService {
   constructor(
     @inject('EmployerRepository')
     private employerRepository: EmployerRepository,
-  ) {
-    this.employerRepository = employerRepository;
-  }
+  ) {}
 
   public async execute(cnpj: string, email: string) {
-    let existUser: any;
+    const existCpfUser = await this.employerRepository.findEmployerByCnpj(cnpj);
+    if (existCpfUser) throw new AppError('CNPJ já existe.');
 
-    existUser = await this.employerRepository.findEmployerByCnpj(cnpj);
-    if (existUser) throw new AppError('CNPJ já existe.');
-
-    existUser = await this.employerRepository.findEmployerByEmail(email);
-    if (existUser) throw new AppError('E-mail já existe.');
+    const existEmailUser = await this.employerRepository.findEmployerByEmail(email);
+    if (existEmailUser) throw new AppError('E-mail já existe.');
   }
 }

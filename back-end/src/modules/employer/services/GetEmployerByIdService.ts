@@ -8,14 +8,12 @@ export class GetEmployerByIdService {
   constructor(
     @inject('EmployerRepository')
     private employerRepository: IEmployerRepository,
-  ) {
-    this.employerRepository = employerRepository;
-  }
+  ) {}
 
-  public async execute(employerId: number): Promise<IEmployer | null> {
+  async execute(employerId: number): Promise<IEmployer | null> {
     const employer = await this.employerRepository.getEmployerById(employerId);
 
-    if (!employer) throw new AppError('Usuário não encontrado.');
+    if (!employer) throw new AppError('Usuário não encontrado.', 404);
 
     return employer;
   }

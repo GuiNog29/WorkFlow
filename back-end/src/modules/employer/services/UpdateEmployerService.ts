@@ -2,6 +2,7 @@ import { UpdateResult } from 'typeorm';
 import { inject, injectable } from 'tsyringe';
 import { AppError } from '@common/exceptions/AppError';
 import { GetEmployerByIdService } from './GetEmployerByIdService';
+import { IUpdateEmployer } from '../domain/models/IUpdateEmployer';
 import { ValidEmployerDataService } from './ValidEmployerDataService';
 import { IEmployerRepository } from '../repositories/interface/IEmployerRepository';
 
@@ -17,11 +18,7 @@ export class UpdateEmployerService {
     private employerRepository: IEmployerRepository,
     private getEmployerByIdService: GetEmployerByIdService,
     private validEmployerDataService: ValidEmployerDataService,
-  ) {
-    this.employerRepository = employerRepository;
-    this.getEmployerByIdService = getEmployerByIdService;
-    this.validEmployerDataService = validEmployerDataService;
-  }
+  ) {}
 
   public async execute(
     employerId: number,
@@ -32,11 +29,12 @@ export class UpdateEmployerService {
 
     if (!employer) throw new AppError('Usuário não encontrado.');
 
-    return await this.employerRepository.update(employerId, {
-      companyName,
-      email,
-      password: employer.password,
-      cnpj: employer.cnpj,
-    });
+    const updateData: IUpdateEmployer = { companyName, email };
+    const updatedResult = await this.employerRepository.update(employerId, updateData);
+
+    if (updatedResult.affected && updatedResult.affected <= 0)
+      throw new AppError('Nenhuma atualização realizada.');
+
+    return updatedResult;
   }
 }

@@ -12,10 +12,10 @@ export type SearchParams = {
 
 export interface ICandidateRepository {
   create({ name, cpf, email, password }: ICreateCandidate): Promise<ICandidate>;
-  update(candidateId: number, { name, email, password }: IUpdateCandidate): Promise<UpdateResult>;
+  update(candidateId: number, { name, email }: IUpdateCandidate): Promise<UpdateResult>;
   getCandidateById(candidateId: number): Promise<ICandidate | null>;
   delete(candidateId: number): Promise<Boolean>;
-  findCandidate(cpf: string, email: string): Promise<ICandidate | null>;
+  findCandidate(cpf?: string, email?: string): Promise<ICandidate | null>;
   findCandidateByCpf(cpf: string): Promise<ICandidate | null>;
   findCandidateByEmail(email: string): Promise<ICandidate | null>;
   findAll({ page, skip, take }: SearchParams): Promise<ICandidatePaginate>;

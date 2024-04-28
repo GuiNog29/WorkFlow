@@ -1,12 +1,12 @@
-import { Employer } from '../entities/Employer';
-import { AppError } from '@common/exceptions/AppError';
-import { GetEmployerByIdService } from './GetEmployerByIdService';
-import { EmployerRepository } from '../repositories/EmployerRepository';
-import { DiskStorageProvider } from '@common/providers/StorageProvider/DiskStorageProvider';
 import upload from '@config/upload';
 import { inject, injectable } from 'tsyringe';
-import { S3StorageProvider } from '@common/providers/StorageProvider/S3StorageProvider';
+import { AppError } from '@common/exceptions/AppError';
+import { IEmployer } from '../domain/models/IEmployer';
+import { GetEmployerByIdService } from './GetEmployerByIdService';
 import { IEmployerRepository } from '../repositories/interface/IEmployerRepository';
+import { S3StorageProvider } from '@common/providers/StorageProvider/S3StorageProvider';
+import { DiskStorageProvider } from '@common/providers/StorageProvider/DiskStorageProvider';
+import { IStorageProvider } from '@common/providers/StorageProvider/interface/IStorageProvider';
 
 interface IRequest {
   employerId: string;
@@ -19,30 +19,18 @@ export class UpdateProfilePictureEmployerService {
     @inject('EmployerRepository')
     private employerRepository: IEmployerRepository,
     private getEmployerByIdService: GetEmployerByIdService,
-  ) {
-    this.employerRepository = employerRepository;
-    this.getEmployerByIdService = getEmployerByIdService;
-  }
+    @inject('StorageProvider')
+    private storageProvider: IStorageProvider,
+  ) {}
 
-  async execute({ employerId, fileName }: IRequest): Promise<Employer | null> {
+  async execute({ employerId, fileName }: IRequest): Promise<IEmployer | null> {
     const employer = await this.getEmployerByIdService.execute(Number(employerId));
-    let profilePicFileName = '';
 
     if (!employer) throw new AppError('Usuário não encontrado.');
 
-    if (upload.driver === 's3') {
-      const s3Provider = new S3StorageProvider();
+    if (employer.profile_picture) await this.storageProvider.deleteFile(employer.profile_picture);
 
-      if (employer.profile_picture) await s3Provider.deleteFile(employer.profile_picture);
-
-      let profilePicFileName = await s3Provider.saveFile(fileName);
-    } else {
-      const diskProvider = new DiskStorageProvider();
-
-      if (employer.profile_picture) await diskProvider.deleteFile(employer.profile_picture);
-
-      let profilePicFileName = await diskProvider.saveFile(fileName);
-    }
+    const profilePicFileName = await this.storageProvider.saveFile(fileName);
 
     return await this.employerRepository.updateProfilePicture(
       Number(employerId),

@@ -3,18 +3,25 @@ import { container } from 'tsyringe';
 import { instanceToInstance } from 'class-transformer';
 import { GetEmployerByIdService } from '@modules/employer/services/GetEmployerByIdService';
 import UpdateProfileEmployerService from '@modules/employer/services/UpdateProfileEmployerService';
+import { ConvertToNumber } from '@modules/user/utils/Converters';
 
 export default class ProfileEmployerController {
   public async show(request: Request, response: Response): Promise<Response> {
     const getEmployerByIdService = container.resolve(GetEmployerByIdService);
-    const userId = Number(request.user.id);
-    return response.json(instanceToInstance(await getEmployerByIdService.execute(userId)));
+    const userId = ConvertToNumber(request.user.id);
+
+    if (!userId) return response.status(400).json({ message: 'Invalid user ID' });
+
+    const user = await getEmployerByIdService.execute(userId)
+    return response.json(instanceToInstance(user));
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
     const updateProfileEmployerService = container.resolve(UpdateProfileEmployerService);
-    const userId = request.user.id;
+    const userId = ConvertToNumber(request.user.id);
     const { companyName, email, password, oldPassword } = request.body;
+
+    if (!userId) return response.status(400).json({ message: 'Invalid user ID' });
 
     const user = await updateProfileEmployerService.execute({
       userId,

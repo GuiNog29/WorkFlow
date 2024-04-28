@@ -17,10 +17,7 @@ export class ResetPasswordCandidateService {
     private candidateRepository: ICandidateRepository,
     @inject('UserTokensRepository')
     private userTokenRepository: IUserTokensRepository,
-  ) {
-    this.candidateRepository = candidateRepository;
-    this.userTokenRepository = userTokenRepository;
-  }
+  ) {}
 
   public async execute({ token, password }: IRequest): Promise<void> {
     const userToken = await this.userTokenRepository.findByToken(token);
@@ -31,10 +28,13 @@ export class ResetPasswordCandidateService {
 
     if (!candidate) throw new AppError('Usuário não encontrado.');
 
-    const compareDate = addHours(userToken.created_at, 2);
+    const tokenExpiration = addHours(userToken.created_at, 2);
 
-    if (isAfter(Date.now(), compareDate)) throw new AppError('Token expirado.');
+    if (isAfter(Date.now(), tokenExpiration)) throw new AppError('Token expirado.');
 
     candidate.password = await hash(password, 8);
+
+    await this.candidateRepository.save(candidate);
+    await this.userTokenRepository.invalidateToken(token);
   }
 }

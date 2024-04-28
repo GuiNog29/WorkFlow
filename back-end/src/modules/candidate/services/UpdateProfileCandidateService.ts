@@ -1,10 +1,10 @@
-import redisCache  from '@common/cache/RedisCache';
+import redisCache from '@common/cache/RedisCache';
 import { compare, hash } from 'bcryptjs';
-import { Candidate } from '../entities/Candidate';
 import { inject, injectable } from 'tsyringe';
 import { AppError } from '@common/exceptions/AppError';
 import { GetCandidateByIdService } from './GetCandidateByIdService';
 import { ICandidateRepository } from '../repositories/interface/ICandidateRepository';
+import { ICandidate } from '../domain/models/ICandidate';
 
 interface IRequest {
   userId: number;
@@ -20,10 +20,7 @@ export default class UpdateProfileCandidateService {
     @inject('CandidateRepository')
     private candidateRepository: ICandidateRepository,
     private getCandidateByIdService: GetCandidateByIdService,
-  ) {
-    this.candidateRepository = candidateRepository;
-    this.getCandidateByIdService = getCandidateByIdService;
-  }
+  ) {}
 
   public async execute({
     userId,
@@ -31,22 +28,19 @@ export default class UpdateProfileCandidateService {
     email,
     password,
     oldPassword,
-  }: IRequest): Promise<Candidate | null> {
+  }: IRequest): Promise<ICandidate | null> {
     const candidate = await this.getCandidateByIdService.execute(Number(userId));
 
     if (!candidate) throw new AppError('Usuário não encontrado.');
 
-    const candidateEmail = await this.candidateRepository.findCandidateByEmail(email);
-
-    if (candidateEmail && candidateEmail.id !== Number(userId))
+    if (email !== candidate.email && (await this.candidateRepository.findCandidateByEmail(email)))
       throw new AppError('Este e-mail já foi cadastrado.');
 
-    if (password && !oldPassword) throw new AppError('Senha antiga deve ser preenchida.');
+    if (password) {
+      if (!oldPassword) throw new AppError('Senha antiga deve ser preenchida.');
 
-    if (password && oldPassword) {
-      const verifyOldPassword = await compare(oldPassword, candidate.password);
-
-      if (!verifyOldPassword) throw new AppError('Senha antiga não confere.');
+      if (!(await compare(oldPassword, candidate.password)))
+        throw new AppError('Senha antiga não confere.');
 
       candidate.password = await hash(password, 8);
     }
@@ -54,9 +48,9 @@ export default class UpdateProfileCandidateService {
     candidate.name = name;
     candidate.email = email;
 
-    await redisCache.invalidate('workflow-CANDIDATES_LIST');
-
     await this.candidateRepository.save(candidate);
+
+    await redisCache.invalidate('workflow-CANDIDATES_LIST');
 
     return candidate;
   }

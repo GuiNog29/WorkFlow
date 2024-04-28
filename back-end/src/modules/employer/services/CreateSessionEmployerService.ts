@@ -2,8 +2,8 @@ import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import authConfig from '@config/auth';
 import { inject, injectable } from 'tsyringe';
-import { Employer } from '../entities/Employer';
 import { AppError } from '@common/exceptions/AppError';
+import { IEmployer } from '../domain/models/IEmployer';
 import { IEmployerRepository } from '../repositories/interface/IEmployerRepository';
 
 interface IRequest {
@@ -13,7 +13,7 @@ interface IRequest {
 }
 
 interface IResponse {
-  employer: Employer;
+  employer: IEmployer;
   token: string;
 }
 
@@ -22,18 +22,16 @@ export class CreateSessionEmployerService {
   constructor(
     @inject('EmployerRepository')
     private employerRepository: IEmployerRepository,
-  ) {
-    this.employerRepository = employerRepository;
-  }
+  ) {}
 
   public async execute({ cnpj, email, password }: IRequest): Promise<IResponse> {
     const employer = await this.employerRepository.findEmployer(cnpj, email);
 
-    if (!employer) throw new AppError('CNPJ/Email ou senha estão incorretos.', 401);
+    if (!employer) throw new AppError('As credenciais fornecidas estão incorretas.', 401);
 
     const passwordConfirmed = await compare(password, employer.password);
 
-    if (!passwordConfirmed) throw new AppError('CNPJ/Email ou senha estão incorretos.', 401);
+    if (!passwordConfirmed) throw new AppError('As credenciais fornecidas estão incorretas.', 401);
 
     const token = sign({}, authConfig.jwt.secret as string, {
       subject: String(employer.id),

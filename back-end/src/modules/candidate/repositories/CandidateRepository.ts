@@ -3,82 +3,79 @@ import { injectable } from 'tsyringe';
 import { dataSource } from '@infra/database';
 import { Candidate } from '../entities/Candidate';
 import { Repository, UpdateResult } from 'typeorm';
-import { ICandidateRepository, SearchParams } from './interface/ICandidateRepository';
+import { ICreateCandidate } from '../domain/models/ICreateCandidate';
+import { IUpdateCandidate } from '../domain/models/IUpdateCandidate';
 import { ICandidate } from '@modules/candidate/domain/models/ICandidate';
 import { ICandidatePaginate } from '../domain/models/ICandidatePaginate';
-import { ICreateCandidate } from '../domain/models/ICreateCandidate';
+import { ICandidateRepository, SearchParams } from './interface/ICandidateRepository';
 
 @injectable()
 export class CandidateRepository implements ICandidateRepository {
-  private candidateRepository: Repository<Candidate>;
+  private ormRepository: Repository<Candidate>;
 
   constructor() {
-    this.candidateRepository = dataSource.getRepository(Candidate);
+    this.ormRepository = dataSource.getRepository(Candidate);
   }
 
-  async create({ name, cpf, email, password }: ICreateCandidate): Promise<ICandidate> {
-    const hashedPassword = await hash(password, 8);
-    const newCandidate = this.candidateRepository.create({
-      name,
-      cpf,
-      email,
+  async create(candidateData: ICreateCandidate): Promise<ICandidate> {
+    const hashedPassword = await hash(candidateData.password, 8);
+
+    const candidate = this.ormRepository.create({
+      ...candidateData,
       password: hashedPassword,
     });
 
-    await this.candidateRepository.save(newCandidate);
-    return newCandidate;
+    await this.ormRepository.save(candidate);
+    return candidate;
   }
 
-  async update(candidateId: number, { name, email, password }: ICandidate): Promise<UpdateResult> {
-    return await this.candidateRepository.update(candidateId, { name, email, password });
+  async update(candidateId: number, candidadeData: IUpdateCandidate): Promise<UpdateResult> {
+    return this.ormRepository.update(candidateId, candidadeData);
   }
 
   async updateProfilePicture(candidateId: number, fileName: string): Promise<ICandidate | null> {
-    await this.candidateRepository.update(candidateId, { profile_picture: fileName });
+    await this.ormRepository.update(candidateId, { profile_picture: fileName });
     return this.getCandidateById(candidateId);
   }
 
   async getCandidateById(candidateId: number): Promise<ICandidate | null> {
-    return await this.candidateRepository.findOneBy({ id: candidateId });
+    return await this.ormRepository.findOneBy({ id: candidateId });
   }
 
   async delete(candidateId: number): Promise<Boolean> {
-    const deleteResult = await this.candidateRepository.delete(candidateId);
+    const deleteResult = await this.ormRepository.delete(candidateId);
     return deleteResult.affected === 1;
   }
 
   async findAll({ page, skip, take }: SearchParams): Promise<ICandidatePaginate> {
-    const [candidates, count] = await this.candidateRepository
-      .createQueryBuilder()
-      .skip(skip)
-      .take(take)
-      .getManyAndCount();
+    const [candidates, count] = await this.ormRepository.findAndCount({
+      skip,
+      take,
+    });
 
-    const result = {
+    return {
       per_page: take,
       total: count,
       current_page: page,
       data: candidates,
     };
-
-    return result;
   }
 
   async findCandidateByCpf(cpf: string): Promise<ICandidate | null> {
-    return await this.candidateRepository.findOneBy({ cpf });
+    return await this.ormRepository.findOneBy({ cpf });
   }
 
   async findCandidateByEmail(email: string): Promise<ICandidate | null> {
-    return await this.candidateRepository.findOneBy({ email });
+    return await this.ormRepository.findOneBy({ email });
   }
 
   async findCandidate(cpf: string, email: string): Promise<ICandidate | null> {
-    return this.candidateRepository.findOne({
+    return this.ormRepository.findOne({
       where: [{ cpf: cpf }, { email: email }],
     });
   }
 
-  async save(candidate: Candidate): Promise<void> {
-    await this.candidateRepository.save(candidate);
+  async save(candidate: ICandidate): Promise<void> {
+    await this.ormRepository.save(candidate);
   }
 }

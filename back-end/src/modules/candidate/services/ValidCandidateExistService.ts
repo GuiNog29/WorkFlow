@@ -5,16 +5,14 @@ import { ICandidateRepository } from '../repositories/interface/ICandidateReposi
 export class ValidCandidateExistService {
   constructor(
     @inject('CandidateRepository')
-    private candidateRepository: ICandidateRepository) {
-    this.candidateRepository = candidateRepository;
-  }
+    private candidateRepository: ICandidateRepository,
+  ) {}
 
   public async execute(cpf: string, email: string) {
-    let existUser: any;
-    existUser = await this.candidateRepository.findCandidateByCpf(cpf);
-    if (existUser) throw new AppError('CPF já existe.');
+    const existCpfUser = await this.candidateRepository.findCandidateByCpf(cpf);
+    if (existCpfUser) throw new AppError('CPF já existe.');
 
-    existUser = await this.candidateRepository.findCandidateByEmail(email);
-    if (existUser) throw new AppError('E-mail já existe.');
+    const existEmailUser = await this.candidateRepository.findCandidateByEmail(email);
+    if (existEmailUser) throw new AppError('E-mail já existe.');
   }
 }

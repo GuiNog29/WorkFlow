@@ -1,11 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 import mime from 'mime-types';
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import uploadConfig from '@config/upload';
 import { AppError } from '@common/exceptions/AppError';
+import { IStorageProvider } from './interface/IStorageProvider';
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 
-export class S3StorageProvider {
+export class S3StorageProvider implements IStorageProvider {
   private client: S3Client;
 
   constructor() {
@@ -17,13 +18,11 @@ export class S3StorageProvider {
   public async saveFile(file: string): Promise<string> {
     const originalPath = path.resolve(uploadConfig.tmpFolder, file);
 
-    if (!fs.existsSync(originalPath)) throw new AppError('Arquivo não encontrado');
+    const fileContent = await fs.promises.readFile(originalPath).catch(() => {
+      throw new AppError('Erro ao ler o arquivo.');
+    });
 
-    const contentType = mime.lookup(originalPath);
-
-    if (!contentType) throw new AppError('Tipo de arquivo não suportado');
-
-    const fileContent = await fs.promises.readFile(originalPath);
+    const contentType = mime.lookup(originalPath) || 'application/octet-stream';
 
     const putObjectCommand = new PutObjectCommand({
       Bucket: uploadConfig.config.aws.bucket,
@@ -33,9 +32,13 @@ export class S3StorageProvider {
       ContentType: contentType,
     });
 
-    await this.client.send(putObjectCommand);
+    await this.client.send(putObjectCommand).catch(() => {
+      throw new AppError('Erro ao enviar arquivo para o S3.');
+    });
 
-    await fs.promises.unlink(originalPath);
+    await fs.promises.unlink(originalPath).catch(() => {
+      throw new AppError('Erro ao deletar arquivo local.');
+    });
 
     return file;
   }
