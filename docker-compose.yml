@@ -16,13 +16,15 @@ services:
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@dbworkflow/${POSTGRES_DB}
       REDIS_URL: redis://redis:6379
 
-  # frontend:
-  #   build: 
-  #     context: ./front-end
-  #     dockerfile: DockerFile
-  #   container_name: frontend_container
-  #   ports:
-  #   - "8080:8080"
+  frontend:
+    build: 
+      context: ./front-end
+      dockerfile: DockerFile
+    container_name: frontend_container
+    ports:
+    - "3001:3000"
+    depends_on:
+      - backend
 
   postgres:
     image: postgres:latest
