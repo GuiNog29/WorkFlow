@@ -22,7 +22,11 @@ services:
       dockerfile: DockerFile
     container_name: frontend_container
     ports:
-    - "3001:3000"
+      - "3001:3000"
+    volumes:
+      - ./front-end:/app
+    environment:
+      - CHOKIDAR_USEPOLLING=true
     depends_on:
       - backend
 
