@@ -6,6 +6,9 @@ services:
       context: ./back-end
       dockerfile: DockerFile
     container_name: backend_container
+    volumes:
+      - ./back-end:/app
+    command: sh -c 'npm run dev'
     env_file: .env
     ports:
       - "3000:3000"
@@ -15,20 +18,25 @@ services:
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@dbworkflow/${POSTGRES_DB}
       REDIS_URL: redis://redis:6379
+    networks:
+      - server
 
   frontend:
     build: 
       context: ./front-end
       dockerfile: DockerFile
     container_name: frontend_container
-    ports:
-      - "3001:3000"
     volumes:
       - ./front-end:/app
+    command: sh -c 'npm run start'
+    ports:
+      - "3001:3000"
     environment:
-      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
     depends_on:
       - backend
+    networks:
+      - server
 
   postgres:
     image: postgres:latest
@@ -42,6 +50,8 @@ services:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    networks:
+      - server
 
   redis:
     image: redis:alpine
@@ -50,7 +60,12 @@ services:
       - "6379:6379"
     volumes:
       - redis-data:/data
+    networks:
+      - server
 
 volumes:
   postgres-data:
   redis-data:
+
+networks:
+  server:
