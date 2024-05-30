@@ -1,0 +1,11 @@
+.left-section {
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; 
+  margin-right: 15%;
+}
+
+.illustration {
+  height: 100%;
+  width: auto;
+}
