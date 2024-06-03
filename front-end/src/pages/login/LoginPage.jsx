@@ -1,6 +1,6 @@
 import React from "react";
 import "./loginPage.css";
-import LeftSection from "../../components/LeftSection/LeftSection";
+import LeftSection from "@components/ImageComponent/ImageComponent";
 
 function LoginPage() {
   return (

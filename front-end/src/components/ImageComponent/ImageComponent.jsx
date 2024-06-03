@@ -1,8 +1,8 @@
 import React from "react";
-import ballonImg from "../../img/ballon.png";
-import "./LeftSection.css";
+import ballonImg from "@assets/images/ballon.png";
+import './ImageComponent.css';
 
-function LeftSection() {
+function ImageSection() {
   return (
     <div className="left-section">
       <img src={ballonImg} alt="Illustration" className="illustration" />
@@ -10,4 +10,4 @@ function LeftSection() {
   );
 }
 
-export default LeftSection;
+export default ImageSection;
